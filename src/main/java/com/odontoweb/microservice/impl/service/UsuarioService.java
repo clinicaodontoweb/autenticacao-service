@@ -2,6 +2,7 @@ package com.odontoweb.microservice.impl.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,7 +33,7 @@ public class UsuarioService {
 	}
 	
 	public User UsuarioToUserToken(Usuario usuario){
-		return new User(usuario.getEmail(), usuario.getTenant(), "admin");
+		return new User(usuario.getEmail(), usuario.getTenant(), usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
 	}
 }
 

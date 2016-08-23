@@ -1,12 +1,18 @@
 package com.odontoweb.microservice.impl.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -23,6 +29,8 @@ public class Usuario implements Serializable{
 	private String email;
 	private String senha;
 	private Boolean admin;
+	
+	private List<Role> roles;
 	
 	public Usuario() {}
 	
@@ -96,6 +104,16 @@ public class Usuario implements Serializable{
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "TBL_USUARIO_ROLE", joinColumns = {@JoinColumn(name = "FK_ROLE", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID")})
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
 
 	@Override
 	public int hashCode() {
@@ -120,5 +138,12 @@ public class Usuario implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nome=" + nome + ", tenant=" + tenant
+				+ ", telefone=" + telefone + ", email=" + email + ", admin="
+				+ admin + ", roles=" + roles + "]";
 	}
 }

@@ -3,9 +3,9 @@ package com.odontoweb.microservice.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.odontoweb.microservice.impl.repository.TesteRepository;
+import com.odontoweb.microservice.impl.repository.RoleRepository;
 import com.odontoweb.microservice.impl.repository.UsuarioRepository;
-import com.odontoweb.microservice.impl.service.TesteService;
+import com.odontoweb.microservice.impl.service.RoleService;
 import com.odontoweb.microservice.impl.service.UsuarioService;
 
 @Configuration
@@ -17,7 +17,7 @@ public class ServiceConfig {
 	}
 	
 	@Bean
-	public TesteService testeService(TesteRepository repository){
-		return new TesteService(repository);
+	public RoleService roleService(RoleRepository repository){
+		return new RoleService(repository);
 	}
 }

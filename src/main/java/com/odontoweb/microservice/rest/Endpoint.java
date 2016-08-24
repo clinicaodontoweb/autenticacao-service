@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.odontoweb.arquitetura.model.User;
 import com.odontoweb.arquitetura.security.JWTAuthorizationUtil;
-import com.odontoweb.microservice.impl.model.Role;
 import com.odontoweb.microservice.impl.model.Usuario;
 import com.odontoweb.microservice.impl.service.RoleService;
 import com.odontoweb.microservice.impl.service.UsuarioService;
+import com.odontoweb.microservice.rest.binder.UsuarioBinder;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.TokenResponse;
 
@@ -27,13 +27,13 @@ public class Endpoint {
 	
 	@Autowired UsuarioService usuarioService;
 	@Autowired RoleService roleService;
-	
+	@Autowired UsuarioBinder usuarioBinder;
 	@Autowired JWTAuthorizationUtil jwtUtil;
 
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
 	public ResponseEntity<TokenResponse> authenticate(@RequestBody @Valid UsuarioRequest usuarioRequest){
 		Usuario usuario = usuarioService.login(usuarioRequest);
-		User user = usuarioService.usuarioToUserToken(usuario);
+		User user = usuarioBinder.bindUser(usuario);
 		
 		return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
 	}
@@ -41,12 +41,8 @@ public class Endpoint {
 	@RequestMapping(value = "/me", method = RequestMethod.GET)
 	public ResponseEntity<List<String>> me(Authentication authentication){
 		User user = (User)authentication.getPrincipal();
+		
 		return new ResponseEntity<List<String>>(user.getRoles(), HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/roles", method = RequestMethod.GET)
-	public ResponseEntity<List<Role>> tiposUsuarios(){
-		return new ResponseEntity<List<Role>>(roleService.findAll(), HttpStatus.OK);
 	}
 	
 }

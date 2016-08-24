@@ -2,11 +2,10 @@ package com.odontoweb.microservice.impl.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
-import com.odontoweb.arquitetura.model.User;
 import com.odontoweb.microservice.exception.UsuarioNotFoundException;
 import com.odontoweb.microservice.impl.model.Usuario;
 import com.odontoweb.microservice.impl.repository.UsuarioRepository;
@@ -15,14 +14,16 @@ import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 public class UsuarioService {
 
 	private UsuarioRepository repository;
+	private Md5PasswordEncoder encoder;
 	
 	@Autowired
-	public UsuarioService(UsuarioRepository usuarioRepository) {
+	public UsuarioService(UsuarioRepository usuarioRepository, Md5PasswordEncoder encoder) {
 		this.repository = usuarioRepository;
+		this.encoder = encoder;
 	}
 	
 	public Usuario login(UsuarioRequest usuario){
-		Usuario user = repository.findByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
+		Usuario user = repository.findByEmailAndSenha(usuario.getEmail(), encoder.encodePassword(usuario.getSenha(), null));
 		Optional.ofNullable(user).orElseThrow(UsuarioNotFoundException::new);
 		
 		return user;
@@ -32,8 +33,5 @@ public class UsuarioService {
 		return repository.findAll();
 	}
 	
-	public User usuarioToUserToken(Usuario usuario){
-		return new User(usuario.getEmail(), usuario.getTenant(), usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
-	}
 }
 

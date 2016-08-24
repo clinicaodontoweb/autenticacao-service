@@ -33,7 +33,7 @@ public class Endpoint {
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
 	public ResponseEntity<TokenResponse> authenticate(@RequestBody @Valid UsuarioRequest usuarioRequest){
 		Usuario usuario = usuarioService.login(usuarioRequest);
-		User user = usuarioService.UsuarioToUserToken(usuario);
+		User user = usuarioService.usuarioToUserToken(usuario);
 		
 		return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
 	}

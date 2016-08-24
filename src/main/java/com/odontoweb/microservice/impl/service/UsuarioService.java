@@ -32,7 +32,7 @@ public class UsuarioService {
 		return repository.findAll();
 	}
 	
-	public User UsuarioToUserToken(Usuario usuario){
+	public User usuarioToUserToken(Usuario usuario){
 		return new User(usuario.getEmail(), usuario.getTenant(), usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
 	}
 }

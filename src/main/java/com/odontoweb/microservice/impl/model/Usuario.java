@@ -106,7 +106,7 @@ public class Usuario implements Serializable{
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "TBL_USUARIO_ROLE", joinColumns = {@JoinColumn(name = "FK_ROLE", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID")})
+	@JoinTable(name = "TBL_USUARIO_ROLE", joinColumns = {@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "FK_ROLE", referencedColumnName = "ID")})
 	public List<Role> getRoles() {
 		return roles;
 	}

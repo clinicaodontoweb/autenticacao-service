@@ -31,6 +31,7 @@ public class Usuario implements Serializable{
 	private Boolean admin;
 	
 	private List<Role> roles;
+	private List<Clinica> clinicas;
 	
 	public Usuario() {}
 	
@@ -113,6 +114,16 @@ public class Usuario implements Serializable{
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "TBL_USUARIO_CLINICA", joinColumns = {@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "FK_CLINICA", referencedColumnName = "ID")})
+	public List<Clinica> getClinicas() {
+		return clinicas;
+	}
+
+	public void setClinicas(List<Clinica> clinicas) {
+		this.clinicas = clinicas;
 	}
 
 	@Override

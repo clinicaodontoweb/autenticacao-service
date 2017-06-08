@@ -1,3 +1,4 @@
+
 package com.odontoweb.microservice.impl.model;
 
 import java.io.Serializable;
@@ -14,16 +15,22 @@ import javax.persistence.Table;
 public class Clinica implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
 	private Long id;
+	
+	@Column(name = "STR_NOME")
 	private String nome;
+	
+	@Column(name = "NUM_CNPJ")
 	private Long cnpj;
+	
+	@Column(name = "BOO_ATIVO")
 	private Boolean ativo;
 	
 	public Clinica() {}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
 	public Long getId() {
 		return id;
 	}
@@ -32,7 +39,6 @@ public class Clinica implements Serializable{
 		this.id = id;
 	}
 
-	@Column(name = "STR_NOME")
 	public String getNome() {
 		return nome;
 	}
@@ -41,7 +47,6 @@ public class Clinica implements Serializable{
 		this.nome = nome;
 	}
 
-	@Column(name = "NUM_CNPJ")
 	public Long getCnpj() {
 		return cnpj;
 	}
@@ -50,7 +55,6 @@ public class Clinica implements Serializable{
 		this.cnpj = cnpj;
 	}
 
-	@Column(name = "BOO_ATIVO")
 	public Boolean getAtivo() {
 		return ativo;
 	}

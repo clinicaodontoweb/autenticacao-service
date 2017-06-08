@@ -14,7 +14,12 @@ import javax.persistence.Table;
 public class Role implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
 	private Long id;
+	
+	@Column(name = "STR_ROLE")
 	private String role;
 	
 	public Role() {}
@@ -24,17 +29,13 @@ public class Role implements Serializable{
 		this.role = role;
 	}
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	@Column(name = "STR_ROLE")
+
 	public String getRole() {
 		return role;
 	}

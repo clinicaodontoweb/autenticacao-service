@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableAutoConfiguration
-@ComponentScan(basePackages = {"com.odontoweb.arquitetura", "com.odontoweb.microservice"})
+@ComponentScan(basePackages = {"com.odontoweb.arquitetura.config", "com.odontoweb.microservice"})
 @EnableJpaRepositories(basePackages = "com.odontoweb.microservice.impl.repository")
 @EntityScan(basePackages = "com.odontoweb.microservice.impl.model")
 @SpringBootApplication

@@ -64,6 +64,17 @@ public class Usuario implements Serializable{
 		this.email = email;
 		this.senha = senha;
 	}
+	
+	public Usuario(Long id, String nome, String tenant, Long telefone, String email, String senha, Boolean admin){
+		this.id = id;
+		this.nome = nome;
+		this.tenant = tenant;
+		this.telefone = telefone;
+		this.email = email;
+		this.senha = senha;
+		this.admin = admin;
+				
+	}
 
 	public Long getId() {
 		return id;

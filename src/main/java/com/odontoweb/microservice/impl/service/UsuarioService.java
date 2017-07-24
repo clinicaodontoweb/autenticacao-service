@@ -16,29 +16,41 @@ public class UsuarioService {
 
 	private UsuarioRepository repository;
 	private Md5PasswordEncoder encoder;
-	
+
 	@Autowired
 	public UsuarioService(UsuarioRepository usuarioRepository, Md5PasswordEncoder encoder) {
 		this.repository = usuarioRepository;
 		this.encoder = encoder;
 	}
-	
-	public Usuario login(UsuarioRequest usuario){
-		Usuario user = repository.findByEmailAndSenha(usuario.getEmail(), encoder.encodePassword(usuario.getSenha(), null));
+
+	public Usuario login(UsuarioRequest usuario) {
+		Usuario user = repository.findByEmailAndSenha(usuario.getEmail(),
+				encoder.encodePassword(usuario.getSenha(), null));
 		Optional.ofNullable(user).orElseThrow(UsuarioNotFoundException::new);
 		Optional.ofNullable(user.getClinicas()).orElseThrow(ClinicaNotFoundException::new);
-		if(user.getClinicas().isEmpty()) throw new ClinicaNotFoundException();
-		
+		if (user.getClinicas().isEmpty())
+			throw new ClinicaNotFoundException();
+
 		return user;
 	}
-	
-	public List<Usuario> getUsuarios(){
+
+	public List<Usuario> getUsuarios() {
 		return repository.findAll();
 	}
-	
-	public Usuario getByEmail(String email){
+
+	public Usuario getByEmail(String email) {
 		return repository.findByEmail(email);
 	}
-	
-}
 
+	public List<Usuario> findAll() {
+		return repository.findAll();
+	}
+
+	public void delete(Long id) {
+		repository.delete(id);
+	}
+
+	public boolean save(Usuario usuario) {
+		return repository.save(usuario) != null;
+	}
+}

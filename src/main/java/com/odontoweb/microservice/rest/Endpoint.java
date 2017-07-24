@@ -26,37 +26,53 @@ import com.odontoweb.microservice.rest.domain.response.UsuarioResponse;
 
 @RestController
 public class Endpoint {
-	
-	@Autowired UsuarioService usuarioService;
-	@Autowired RoleService roleService;
-	@Autowired ClinicaService clinicaService;
-	@Autowired UsuarioBinder usuarioBinder;
-	@Autowired JWTAuthorizationUtil jwtUtil;
+
+	@Autowired
+	UsuarioService usuarioService;
+	@Autowired
+	RoleService roleService;
+	@Autowired
+	ClinicaService clinicaService;
+	@Autowired
+	UsuarioBinder usuarioBinder;
+	@Autowired
+	JWTAuthorizationUtil jwtUtil;
 
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
-	public ResponseEntity<TokenResponse> authenticate(@RequestBody @Valid UsuarioRequest usuarioRequest){
+	public ResponseEntity<TokenResponse> authenticate(@RequestBody @Valid UsuarioRequest usuarioRequest) {
 		Usuario usuario = usuarioService.login(usuarioRequest);
 		User user = usuarioBinder.bindUser(usuario);
-		
+
 		return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/auth/{id}", method = RequestMethod.GET)
-	public ResponseEntity<TokenResponse> updateToken(@PathVariable("id") Long idClinica, Authentication authentication){
+	public ResponseEntity<TokenResponse> updateToken(@PathVariable("id") Long idClinica,
+			Authentication authentication) {
 		Clinica clinica = clinicaService.getById(idClinica);
-		User user = (User)authentication.getPrincipal();
+		User user = (User) authentication.getPrincipal();
 		user.setTenant(clinica.getCnpj().toString());
-		
+
 		return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/me", method = RequestMethod.GET)
-	public ResponseEntity<UsuarioResponse> me(Authentication authentication){
-		User user = (User)authentication.getPrincipal();
-		
-		return new ResponseEntity<UsuarioResponse>(usuarioBinder.bindToResponse(usuarioService.getByEmail(user.getUsername())), HttpStatus.OK);
+	public ResponseEntity<UsuarioResponse> me(Authentication authentication) {
+		User user = (User) authentication.getPrincipal();
+
+		return new ResponseEntity<UsuarioResponse>(
+				usuarioBinder.bindToResponse(usuarioService.getByEmail(user.getUsername())), HttpStatus.OK);
 	}
-	
-	
-	
+
+	@RequestMapping(value = "/usuario", method = RequestMethod.POST)
+	public ResponseEntity<?> saveUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
+		usuarioService.save(usuarioBinder.requestToModel(usuarioRequest));
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteUsuario(@PathVariable("id") Long id) {
+		usuarioService.delete(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import com.odontoweb.arquitetura.model.User;
 import com.odontoweb.microservice.impl.model.Clinica;
 import com.odontoweb.microservice.impl.model.Usuario;
+import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.UsuarioResponse;
 
@@ -13,6 +14,8 @@ public class UsuarioBinder {
 	private ClinicaBinder clinicaBinder;
 	private RoleBinder roleBinder;
 
+	public UsuarioBinder() {
+	}
 	public UsuarioBinder(ClinicaBinder clinicaBinder, RoleBinder roleBinder) {
 		this.clinicaBinder = clinicaBinder;
 		this.roleBinder = roleBinder;
@@ -33,12 +36,10 @@ public class UsuarioBinder {
 				usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
 	}
 
-	public UsuarioResponse bindToResponse(Usuario usuario) {
+	public UsuarioResponse modelToResponse(Usuario usuario) {
 		UsuarioResponse usuarioResponse = new UsuarioResponse();
 
 		usuarioResponse.setId(usuario.getId());
-		usuarioResponse.setNome(usuario.getNome());
-		usuarioResponse.setTelefone(usuario.getTelefone());
 		usuarioResponse.setEmail(usuario.getEmail());
 		usuarioResponse.setAdmin(usuario.getAdmin());
 		usuarioResponse.setClinicas(clinicaBinder.bindToResponse(usuario.getClinicas()));
@@ -48,8 +49,8 @@ public class UsuarioBinder {
 	}
 
 	public Usuario requestToModel(UsuarioRequest usuarioRequest) {
-		return new Usuario(usuarioRequest.getId(), usuarioRequest.getNome(), usuarioRequest.getTenant(),
-				usuarioRequest.getTelefone(), usuarioRequest.getEmail(), usuarioRequest.getSenha(),
-				usuarioRequest.getAdmin());
+		return new Usuario(usuarioRequest.getId(), usuarioRequest.getTenant(), usuarioRequest.getEmail(),
+				usuarioRequest.getSenha(), usuarioRequest.getAdmin(),
+				TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}
 }

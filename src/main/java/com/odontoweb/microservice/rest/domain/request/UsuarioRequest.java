@@ -9,10 +9,9 @@ public class UsuarioRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private String nome;
 	private String tenant;
-	private Long telefone;
 	private Boolean admin;
+	private String tipoProfissional;
 
 	@NotNull(message = "Email é obrigatório")
 	@Size(min = 1, max = 100, message = "Tamanho do email deve ser entre 1 e 100")
@@ -53,14 +52,6 @@ public class UsuarioRequest implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
 	public String getTenant() {
 		return tenant;
 	}
@@ -69,20 +60,20 @@ public class UsuarioRequest implements Serializable {
 		this.tenant = tenant;
 	}
 
-	public Long getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(Long telefone) {
-		this.telefone = telefone;
-	}
-
 	public Boolean getAdmin() {
 		return admin;
 	}
 
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
+	}
+
+	public String getTipoProfissional() {
+		return tipoProfissional;
+	}
+
+	public void setTipoProfissional(String tipoProfissional) {
+		this.tipoProfissional = tipoProfissional;
 	}
 
 }

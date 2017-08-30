@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,61 +21,64 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
+import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
+
 @Entity
 @Table(name = "TBL_USUARIO")
-public class Usuario implements Serializable{
+public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Long id;
-	
-	@Column(name = "STR_NOME")
-	private String nome;
-	
-	@Column(name = "STR_TENANT")
-	private String tenant;
-	
-	@Column(name = "NUM_TELEFONE")
-	private Long telefone;
-	
-	@Column(name = "STR_EMAIL")
+
+	@Column(name = "STR_EMAIL", unique = true)
 	private String email;
-	
+
 	@Column(name = "STR_SENHA")
 	private String senha;
-	
-	@Type(type="true_false")
+
+	@Type(type = "true_false")
 	@Column(name = "BOO_ADMIN")
 	private Boolean admin;
-	
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "STR_TIPO_PROFISSIONAL")
+	private TipoProfissional tipoProfissional;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
-	@JoinTable(name = "TBL_USUARIO_ROLE", joinColumns = {@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "FK_ROLE", referencedColumnName = "ID")})
+	@JoinTable(name = "TBL_USUARIO_ROLE", joinColumns = {
+			@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "FK_ROLE", referencedColumnName = "ID") })
 	private List<Role> roles;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
-	@JoinTable(name = "TBL_USUARIO_CLINICA", joinColumns = {@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID")}, inverseJoinColumns = {@JoinColumn(name = "FK_CLINICA", referencedColumnName = "ID")})
+	@JoinTable(name = "TBL_USUARIO_CLINICA", joinColumns = {
+			@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "FK_CLINICA", referencedColumnName = "ID") })
 	private List<Clinica> clinicas;
-	
-	public Usuario() {}
-	
-	public Usuario(String email, String senha) {
+
+	public Usuario() {
+	}
+
+	public Usuario(String email, String senha, TipoProfissional tipoProfissional) {
 		this.email = email;
 		this.senha = senha;
+		this.admin = Boolean.FALSE;
+		this.tipoProfissional = tipoProfissional;
 	}
-	
-	public Usuario(Long id, String nome, String tenant, Long telefone, String email, String senha, Boolean admin){
+
+	public Usuario(Long id, String tenant, String email, String senha, Boolean admin,
+			TipoProfissional tipoProfissional) {
 		this.id = id;
-		this.nome = nome;
-		this.tenant = tenant;
-		this.telefone = telefone;
 		this.email = email;
 		this.senha = senha;
 		this.admin = admin;
-				
+		this.tipoProfissional = tipoProfissional;
+
 	}
 
 	public Long getId() {
@@ -82,30 +87,6 @@ public class Usuario implements Serializable{
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-	
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getTenant() {
-		return tenant;
-	}
-
-	public void setTenant(String tenant) {
-		this.tenant = tenant;
-	}
-
-	public Long getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(Long telefone) {
-		this.telefone = telefone;
 	}
 
 	public String getEmail() {
@@ -131,7 +112,7 @@ public class Usuario implements Serializable{
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
-	
+
 	public List<Role> getRoles() {
 		return roles;
 	}
@@ -139,13 +120,21 @@ public class Usuario implements Serializable{
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-	
+
 	public List<Clinica> getClinicas() {
 		return clinicas;
 	}
 
 	public void setClinicas(List<Clinica> clinicas) {
 		this.clinicas = clinicas;
+	}
+
+	public TipoProfissional getTipoProfissional() {
+		return tipoProfissional;
+	}
+
+	public void setTipoProfissional(TipoProfissional tipoProfissional) {
+		this.tipoProfissional = tipoProfissional;
 	}
 
 	@Override
@@ -175,8 +164,6 @@ public class Usuario implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", tenant=" + tenant
-				+ ", telefone=" + telefone + ", email=" + email + ", admin="
-				+ admin + ", roles=" + roles + "]";
+		return "Usuario [id=" + id + ", email=" + email + ", admin=" + admin + ", roles=" + roles + "]";
 	}
 }

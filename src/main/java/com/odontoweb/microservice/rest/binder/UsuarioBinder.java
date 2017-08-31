@@ -11,14 +11,7 @@ import com.odontoweb.microservice.rest.domain.response.UsuarioResponse;
 
 public class UsuarioBinder {
 
-	private ClinicaBinder clinicaBinder;
-	private RoleBinder roleBinder;
-
 	public UsuarioBinder() {
-	}
-	public UsuarioBinder(ClinicaBinder clinicaBinder, RoleBinder roleBinder) {
-		this.clinicaBinder = clinicaBinder;
-		this.roleBinder = roleBinder;
 	}
 
 	public User bindUser(Usuario usuario) {
@@ -37,19 +30,20 @@ public class UsuarioBinder {
 	}
 
 	public UsuarioResponse modelToResponse(Usuario usuario) {
+		if(usuario == null ) return null;
 		UsuarioResponse usuarioResponse = new UsuarioResponse();
-
 		usuarioResponse.setId(usuario.getId());
 		usuarioResponse.setEmail(usuario.getEmail());
 		usuarioResponse.setAdmin(usuario.getAdmin());
-		usuarioResponse.setClinicas(clinicaBinder.bindToResponse(usuario.getClinicas()));
-		usuarioResponse.setRoles(roleBinder.bindToResponse(usuario.getRoles()));
+		
+		usuarioResponse.setClinicas(new ClinicaBinder().bindToResponse(usuario.getClinicas()));
+//		usuarioResponse.setRoles(new RoleBinder().bindToResponse(usuario.getRoles()));
 
 		return usuarioResponse;
 	}
 
 	public Usuario requestToModel(UsuarioRequest usuarioRequest) {
-		return new Usuario(usuarioRequest.getId(), usuarioRequest.getTenant(), usuarioRequest.getEmail(),
+		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(),
 				usuarioRequest.getSenha(), usuarioRequest.getAdmin(),
 				TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}

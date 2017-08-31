@@ -13,6 +13,7 @@ public class ClinicaBinder {
 	}
 	
 	public List<ClinicaResponse> bindToResponse(List<Clinica> clinicas){
+		if(clinicas == null) return null;
 		return clinicas.stream().map(clinica -> bindToResponse(clinica)).collect(Collectors.toList());
 	}
 }

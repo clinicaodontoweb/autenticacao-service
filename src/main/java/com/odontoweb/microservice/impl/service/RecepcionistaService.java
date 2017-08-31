@@ -5,18 +5,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.odontoweb.microservice.impl.model.Recepcionista;
+import com.odontoweb.microservice.impl.repository.ClinicaRepository;
 import com.odontoweb.microservice.impl.repository.RecepcionistaRepository;
 import com.odontoweb.microservice.impl.repository.UsuarioRepository;
 
 public class RecepcionistaService {
 
 	private RecepcionistaRepository recepcionistaRepository;
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
 	@Autowired
-	public RecepcionistaService(RecepcionistaRepository recepcionistaRepository) {
+	private ClinicaRepository clinicaRepository;
+
+	@Autowired
+	public RecepcionistaService(RecepcionistaRepository recepcionistaRepository, ClinicaRepository clinicaRepository) {
 		this.recepcionistaRepository = recepcionistaRepository;
 	}
 
@@ -28,15 +32,15 @@ public class RecepcionistaService {
 		recepcionistaRepository.delete(id);
 	}
 
-	public List<Recepcionista> findAll() {
-		return recepcionistaRepository.findAll();
+	public List<Recepcionista> findAllRecepcionistasByClinica(Long idClinica) {
+		return recepcionistaRepository.findAllRecepcionistasByClinica(clinicaRepository.findOne(idClinica));
 	}
 
 	public Recepcionista findById(Long idRecepcionista) {
 		return recepcionistaRepository.findOne(idRecepcionista);
 	}
-	
-	public Recepcionista findByUsuarioClinica(String email){
+
+	public Recepcionista findByUsuarioClinica(String email) {
 		return recepcionistaRepository.findByUsuario(usuarioRepository.findByEmail(email));
 	}
 

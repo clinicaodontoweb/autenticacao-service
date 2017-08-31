@@ -94,18 +94,6 @@ public class Endpoint {
 				usuarioBinder.modelToResponse(usuarioService.getByEmail(user.getUsername())), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/usuario", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
-		usuarioService.save(usuarioBinder.requestToModel(usuarioRequest));
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
-
-	@RequestMapping(value = "/usuario/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteUsuario(@PathVariable("id") Long id) {
-		usuarioService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
 	@RequestMapping(value = "/dentista", method = RequestMethod.POST)
 	public ResponseEntity<?> saveDentista(@RequestBody @Valid DentistaRequest dentistaRequest,
 			Authentication authentication) {
@@ -145,10 +133,11 @@ public class Endpoint {
 		return new ResponseEntity<>(dentistaBinder.modelToResponse(dentistaService.findById(id)), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/dentista", method = RequestMethod.GET)
-	public ResponseEntity<List<DentistaResponse>> findAllDentistas() {
-		return new ResponseEntity<List<DentistaResponse>>(dentistaBinder.modelToListResponse(dentistaService.findAll()),
-				HttpStatus.OK);
+	@RequestMapping(value = "/dentista/clinica/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<DentistaResponse>> findAllDentistasByClinica(@PathVariable("id") Long id) {
+
+		return new ResponseEntity<List<DentistaResponse>>(
+				dentistaBinder.modelToListResponse(dentistaService.findAllDentistasByClinica(id)), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dentista/{id}", method = RequestMethod.DELETE)
@@ -199,10 +188,11 @@ public class Endpoint {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/recepcionista", method = RequestMethod.GET)
-	public ResponseEntity<List<RecepcionistaResponse>> findAllRecepcionistas() {
+	@RequestMapping(value = "/recepcionista/clinica/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<RecepcionistaResponse>> findAllRecepcionistasByClinica(@PathVariable("id") Long id) {
 		return new ResponseEntity<List<RecepcionistaResponse>>(
-				recepcionistaBinder.modelToListResponse(recepcionistaService.findAll()), HttpStatus.OK);
+				recepcionistaBinder.modelToListResponse(recepcionistaService.findAllRecepcionistasByClinica(id)),
+				HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/recepcionista/{id}", method = RequestMethod.DELETE)
@@ -211,4 +201,7 @@ public class Endpoint {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	/**
+	 * Buscar todos os dentistas e clinicas associados a um usuário
+	 */
 }

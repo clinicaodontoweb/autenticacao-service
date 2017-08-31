@@ -1,6 +1,7 @@
 package com.odontoweb.microservice.rest.domain.request;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -9,7 +10,6 @@ public class UsuarioRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private String tenant;
 	private Boolean admin;
 	private String tipoProfissional;
 
@@ -19,6 +19,8 @@ public class UsuarioRequest implements Serializable {
 
 	@NotNull(message = "Senha é obrigatório")
 	private String senha;
+
+	List<Long> clinicas;
 
 	public UsuarioRequest() {
 	}
@@ -52,14 +54,6 @@ public class UsuarioRequest implements Serializable {
 		this.id = id;
 	}
 
-	public String getTenant() {
-		return tenant;
-	}
-
-	public void setTenant(String tenant) {
-		this.tenant = tenant;
-	}
-
 	public Boolean getAdmin() {
 		return admin;
 	}
@@ -74,6 +68,14 @@ public class UsuarioRequest implements Serializable {
 
 	public void setTipoProfissional(String tipoProfissional) {
 		this.tipoProfissional = tipoProfissional;
+	}
+
+	public List<Long> getClinicas() {
+		return clinicas;
+	}
+
+	public void setClinicas(List<Long> clinicas) {
+		this.clinicas = clinicas;
 	}
 
 }

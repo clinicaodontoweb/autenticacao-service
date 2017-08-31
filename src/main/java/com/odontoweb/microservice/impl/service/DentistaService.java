@@ -5,16 +5,23 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.odontoweb.microservice.impl.model.Clinica;
 import com.odontoweb.microservice.impl.model.Dentista;
+import com.odontoweb.microservice.impl.repository.ClinicaRepository;
 import com.odontoweb.microservice.impl.repository.DentistaRepository;
 
 public class DentistaService {
 
-	private DentistaRepository dentistaRepository;
-
 	@Autowired
-	public DentistaService(DentistaRepository profissionalRespository) {
+	private DentistaRepository dentistaRepository;
+	
+	@Autowired
+	private ClinicaRepository clinicaRepository;
+
+	
+	public DentistaService(DentistaRepository profissionalRespository, ClinicaRepository clinicaRespository) {
 		this.dentistaRepository = profissionalRespository;
+		this.clinicaRepository = clinicaRespository;
 	}
 
 	public boolean save(Dentista dentista) {
@@ -25,8 +32,10 @@ public class DentistaService {
 		dentistaRepository.delete(id);
 	}
 
-	public List<Dentista> findAll() {
-		return dentistaRepository.findAll();
+	public List<Dentista> findAllDentistasByClinica(Long idClinica) {
+		Clinica clinica = clinicaRepository.findOne(idClinica);		
+		List<Dentista> dentistas = dentistaRepository.findAllDentistasByClinica(clinica);
+		return dentistas; 
 	}
 
 	public Dentista findById(Long idPaciente) {

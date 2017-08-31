@@ -71,7 +71,7 @@ public class Usuario implements Serializable {
 		this.tipoProfissional = tipoProfissional;
 	}
 
-	public Usuario(Long id, String tenant, String email, String senha, Boolean admin,
+	public Usuario(Long id, String email, String senha, Boolean admin,
 			TipoProfissional tipoProfissional) {
 		this.id = id;
 		this.email = email;

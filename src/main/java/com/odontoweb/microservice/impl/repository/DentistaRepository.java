@@ -14,4 +14,7 @@ public interface DentistaRepository extends JpaRepository<Dentista, Long> {
 	
 	@Query("SELECT DISTINCT dentista FROM Dentista dentista JOIN dentista.usuario.clinicas clinica where clinica = ?1 and dentista.usuario.tipoProfissional ='DENTISTA' ")
 	public List<Dentista> findAllDentistasByClinica(Clinica clinica);
+	
+	@Query("SELECT DISTINCT dentista FROM Dentista dentista JOIN dentista.usuario.clinicas clinica where clinica in ?1 and dentista.usuario.tipoProfissional ='DENTISTA' ")
+	public List<Dentista> findAllDentistasByClinicas(List<Clinica> clinicas);
 }

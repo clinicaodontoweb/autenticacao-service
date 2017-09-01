@@ -33,6 +33,7 @@ import com.odontoweb.microservice.rest.binder.UsuarioBinder;
 import com.odontoweb.microservice.rest.domain.request.DentistaRequest;
 import com.odontoweb.microservice.rest.domain.request.RecepcionistaRequest;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
+import com.odontoweb.microservice.rest.domain.response.ClinicasDentistasResponse;
 import com.odontoweb.microservice.rest.domain.response.DentistaResponse;
 import com.odontoweb.microservice.rest.domain.response.RecepcionistaResponse;
 import com.odontoweb.microservice.rest.domain.response.TokenResponse;
@@ -133,11 +134,11 @@ public class Endpoint {
 		return new ResponseEntity<>(dentistaBinder.modelToResponse(dentistaService.findById(id)), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/dentista/clinica/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List<DentistaResponse>> findAllDentistasByClinica(@PathVariable("id") Long id) {
+	@RequestMapping(value = "/dentista/clinica/{cnpj}", method = RequestMethod.GET)
+	public ResponseEntity<List<DentistaResponse>> findAllDentistasByClinica(@PathVariable("cnpj") Long cnpj) {
 
 		return new ResponseEntity<List<DentistaResponse>>(
-				dentistaBinder.modelToListResponse(dentistaService.findAllDentistasByClinica(id)), HttpStatus.OK);
+				dentistaBinder.modelToListResponse(dentistaService.findAllDentistasByClinica(cnpj)), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dentista/{id}", method = RequestMethod.DELETE)
@@ -188,10 +189,10 @@ public class Endpoint {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/recepcionista/clinica/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List<RecepcionistaResponse>> findAllRecepcionistasByClinica(@PathVariable("id") Long id) {
+	@RequestMapping(value = "/recepcionista/clinica/{cnpj}", method = RequestMethod.GET)
+	public ResponseEntity<List<RecepcionistaResponse>> findAllRecepcionistasByClinica(@PathVariable("cnpj") Long cnpj) {
 		return new ResponseEntity<List<RecepcionistaResponse>>(
-				recepcionistaBinder.modelToListResponse(recepcionistaService.findAllRecepcionistasByClinica(id)),
+				recepcionistaBinder.modelToListResponse(recepcionistaService.findAllRecepcionistasByClinica(cnpj)),
 				HttpStatus.OK);
 	}
 
@@ -201,7 +202,13 @@ public class Endpoint {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	/**
-	 * Buscar todos os dentistas e clinicas associados a um usuário
-	 */
+	@RequestMapping(value = "/usuario/clinica/dentista", method = RequestMethod.GET)
+	public ResponseEntity<ClinicasDentistasResponse> findAllClinicasDentistasByUsuario(Authentication authentication) {
+		User user = (User) authentication.getPrincipal();
+		Usuario usuario = usuarioService.getByEmail(user.getUsername());
+		if (usuario == null)
+			return null;
+		return new ResponseEntity<ClinicasDentistasResponse>(new DentistaBinder().modelToResponse(usuario.getClinicas(),
+				dentistaService.findAllDentistasByClinicas(usuario.getClinicas())), HttpStatus.OK);
+	}
 }

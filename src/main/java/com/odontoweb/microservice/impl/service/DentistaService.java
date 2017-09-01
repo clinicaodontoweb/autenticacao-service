@@ -14,11 +14,10 @@ public class DentistaService {
 
 	@Autowired
 	private DentistaRepository dentistaRepository;
-	
+
 	@Autowired
 	private ClinicaRepository clinicaRepository;
 
-	
 	public DentistaService(DentistaRepository profissionalRespository, ClinicaRepository clinicaRespository) {
 		this.dentistaRepository = profissionalRespository;
 		this.clinicaRepository = clinicaRespository;
@@ -32,17 +31,19 @@ public class DentistaService {
 		dentistaRepository.delete(id);
 	}
 
-	public List<Dentista> findAllDentistasByClinica(Long idClinica) {
-		Clinica clinica = clinicaRepository.findOne(idClinica);		
-		List<Dentista> dentistas = dentistaRepository.findAllDentistasByClinica(clinica);
-		return dentistas; 
+	public List<Dentista> findAllDentistasByClinica(Long cnpj) {
+		return dentistaRepository.findAllDentistasByClinica(clinicaRepository.findByCnpj(cnpj));
+	}
+	
+	public List<Dentista> findAllDentistasByClinicas(List<Clinica> clinicas) {
+		return dentistaRepository.findAllDentistasByClinicas(clinicas);
 	}
 
 	public Dentista findById(Long idPaciente) {
 		return dentistaRepository.findOne(idPaciente);
 	}
-	
-	public List<Dentista> getListDentistas(List<Long> ids){
+
+	public List<Dentista> getListDentistas(List<Long> ids) {
 		List<Dentista> dentistas = new ArrayList<Dentista>();
 		for (Long id : ids) {
 			dentistas.add(findById(id));

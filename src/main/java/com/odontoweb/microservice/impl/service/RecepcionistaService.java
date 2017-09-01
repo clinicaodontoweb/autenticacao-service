@@ -32,8 +32,12 @@ public class RecepcionistaService {
 		recepcionistaRepository.delete(id);
 	}
 
-	public List<Recepcionista> findAllRecepcionistasByClinica(Long idClinica) {
-		return recepcionistaRepository.findAllRecepcionistasByClinica(clinicaRepository.findOne(idClinica));
+	public List<Recepcionista> findAllRecepcionistasByClinica(Long cnpj) {
+		return recepcionistaRepository.findAllRecepcionistasByClinica(clinicaRepository.findByCnpj(cnpj));
+	}
+	
+	public List<Recepcionista> findAllRecepcionistasByClinicaClinicas(Long cnpj) {
+		return recepcionistaRepository.findAllRecepcionistasByClinica(clinicaRepository.findByCnpj(cnpj));
 	}
 
 	public Recepcionista findById(Long idRecepcionista) {

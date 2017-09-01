@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.odontoweb.microservice.impl.model.Clinica;
 import com.odontoweb.microservice.impl.model.Dentista;
 import com.odontoweb.microservice.impl.model.enums.Genero;
 import com.odontoweb.microservice.rest.domain.request.DentistaRequest;
+import com.odontoweb.microservice.rest.domain.response.ClinicasDentistasResponse;
 import com.odontoweb.microservice.rest.domain.response.DentistaResponse;
 
 public class DentistaBinder implements Serializable {
@@ -41,5 +43,12 @@ public class DentistaBinder implements Serializable {
 		return dentistasRequest.stream().filter(Objects::nonNull)
 				.map(dentistaRequest -> requestToModel(dentistaRequest)).collect(Collectors.toList());
 
+	}
+
+	public ClinicasDentistasResponse modelToResponse(List<Clinica> clinicas, List<Dentista> dentistas) {
+		if (clinicas == null || dentistas == null)
+			return null;
+		return new ClinicasDentistasResponse(new ClinicaBinder().bindToResponse(clinicas),
+				modelToListResponse(dentistas));
 	}
 }

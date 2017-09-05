@@ -8,3 +8,6 @@ bin/
 build/
 classes/
 lib/
+.idea/
+autenticacao-service.iml
+out/

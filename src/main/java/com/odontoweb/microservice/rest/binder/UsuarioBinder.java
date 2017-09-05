@@ -15,17 +15,10 @@ public class UsuarioBinder {
 	}
 
 	public User bindUser(Usuario usuario) {
-		return new User(usuario.getEmail(), usuario.getClinicas().get(0).getCnpj().toString(),
-				usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
-	}
-
-	public User bindUser(Usuario usuario, Clinica clinica) {
-		return new User(usuario.getEmail(), clinica.getCnpj().toString(),
-				usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
-	}
-
-	public User bindUser(Usuario usuario, String tenant) {
-		return new User(usuario.getEmail(), tenant,
+		return new User(usuario.getEmail(),
+				usuario.getClinicas().get(0).getCnpj().toString(),
+				usuario.getTipoProfissional().toString(),
+				usuario.getAdmin(),
 				usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
 	}
 

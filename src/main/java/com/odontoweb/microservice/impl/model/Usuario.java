@@ -39,7 +39,6 @@ public class Usuario implements Serializable {
 	@Column(name = "STR_SENHA")
 	private String senha;
 
-	@Type(type = "true_false")
 	@Column(name = "BOO_ADMIN")
 	private Boolean admin;
 

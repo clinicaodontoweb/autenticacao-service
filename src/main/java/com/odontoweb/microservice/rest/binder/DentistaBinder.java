@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.odontoweb.microservice.impl.model.Clinica;
 import com.odontoweb.microservice.impl.model.Dentista;
 import com.odontoweb.microservice.impl.model.enums.Genero;
+import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
 import com.odontoweb.microservice.rest.domain.request.DentistaRequest;
 import com.odontoweb.microservice.rest.domain.response.ClinicasDentistasResponse;
 import com.odontoweb.microservice.rest.domain.response.DentistaResponse;
@@ -19,7 +20,8 @@ public class DentistaBinder implements Serializable {
 	public Dentista requestToModel(DentistaRequest dentistaRequest) {
 		return new Dentista(dentistaRequest.getIdDentista(), dentistaRequest.getNome(),
 				Genero.valueOf(dentistaRequest.getGenero()), dentistaRequest.getConselho(),
-				dentistaRequest.getRegistro(), dentistaRequest.getCodigoBrasileiroOcupacao());
+				dentistaRequest.getRegistro(), dentistaRequest.getCodigoBrasileiroOcupacao(),
+				new UsuarioBinder().requestToModel(dentistaRequest.getUsuarioRequest(),TipoProfissional.DENTISTA));
 	}
 
 	public DentistaResponse modelToResponse(Dentista dentista) {

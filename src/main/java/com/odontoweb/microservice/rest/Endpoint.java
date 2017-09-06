@@ -96,18 +96,13 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/dentista", method = RequestMethod.POST)
-	public ResponseEntity<?> saveDentista(@RequestBody @Valid DentistaRequest dentistaRequest,
-			Authentication authentication) {
-		User user = (User) authentication.getPrincipal();
+	public ResponseEntity<?> saveDentista(@RequestBody @Valid DentistaRequest dentistaRequest) {
 		Dentista dentista = dentistaBinder.requestToModel(dentistaRequest);
-		Usuario usuario = usuarioService.getByEmail(dentistaRequest.getUsuarioRequest().getEmail());
-		if (usuario == null) {
-			usuario = new Usuario();
-			usuario.setEmail(dentistaRequest.getUsuarioRequest().getEmail());
-			usuario.setTipoProfissional(TipoProfissional.DENTISTA);
-			usuario.setSenha(MD5.digest(dentistaRequest.getUsuarioRequest().getSenha()));
-		}
-		dentista.setUsuario(usuario);
+		// TODO fazer a validacao. se existir usuario, soltar excecao
+		// Usuario usuario =
+		// usuarioService.getByEmail(dentistaRequest.getUsuarioRequest().getEmail());
+		List<Clinica> clinicas = clinicaService.getClinicasByIds(dentistaRequest.getUsuarioRequest().getClinicas());
+		dentista.getUsuario().setClinicas(clinicas);
 		dentistaService.save(dentista);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}

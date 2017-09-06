@@ -40,4 +40,10 @@ public class UsuarioBinder {
 				usuarioRequest.getSenha(), usuarioRequest.getAdmin(),
 				TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}
+	
+	public Usuario requestToModel(UsuarioRequest usuarioRequest, TipoProfissional tipoProfissional) {
+		usuarioRequest.setTipoProfissional(tipoProfissional.name());
+		Usuario usuario = requestToModel(usuarioRequest);
+		return usuario;
+	}
 }

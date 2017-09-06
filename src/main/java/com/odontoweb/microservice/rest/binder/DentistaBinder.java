@@ -19,7 +19,7 @@ public class DentistaBinder implements Serializable {
 
 	public Dentista requestToModel(DentistaRequest dentistaRequest) {
 		return new Dentista(dentistaRequest.getIdDentista(), dentistaRequest.getNome(),
-				Genero.valueOf(dentistaRequest.getGenero()), dentistaRequest.getConselho(),
+				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getConselho(),
 				dentistaRequest.getRegistro(), dentistaRequest.getCodigoBrasileiroOcupacao(),
 				new UsuarioBinder().requestToModel(dentistaRequest.getUsuarioRequest(),TipoProfissional.DENTISTA));
 	}

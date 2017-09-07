@@ -18,9 +18,9 @@ public class DentistaService {
 	@Autowired
 	private ClinicaRepository clinicaRepository;
 
-	public DentistaService(DentistaRepository profissionalRespository, ClinicaRepository clinicaRespository) {
-		this.dentistaRepository = profissionalRespository;
-		this.clinicaRepository = clinicaRespository;
+	public DentistaService(DentistaRepository dentistaRepository, ClinicaRepository clinicaRepository) {
+		this.dentistaRepository = dentistaRepository;
+		this.clinicaRepository = clinicaRepository;
 	}
 
 	public boolean save(Dentista dentista) {
@@ -34,7 +34,7 @@ public class DentistaService {
 	public List<Dentista> findAllDentistasByClinica(Long cnpj) {
 		return dentistaRepository.findAllDentistasByClinica(clinicaRepository.findByCnpj(cnpj));
 	}
-	
+
 	public List<Dentista> findAllDentistasByClinicas(List<Clinica> clinicas) {
 		return dentistaRepository.findAllDentistasByClinicas(clinicas);
 	}
@@ -49,6 +49,11 @@ public class DentistaService {
 			dentistas.add(findById(id));
 		}
 		return dentistas;
+	}
+	
+	public Dentista loadClinicas(Dentista dentista, List<Long> idsClinicas){
+		dentista.getUsuario().setClinicas(clinicaRepository.findClinicasByIds(idsClinicas));
+		return dentista;
 	}
 
 }

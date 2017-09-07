@@ -24,7 +24,7 @@ public class RecepcionistaService {
 		this.recepcionistaRepository = recepcionistaRepository;
 	}
 
-	public boolean save(Recepcionista recepcionista, String email) {
+	public boolean save(Recepcionista recepcionista) {
 		return recepcionistaRepository.save(recepcionista) != null;
 	}
 

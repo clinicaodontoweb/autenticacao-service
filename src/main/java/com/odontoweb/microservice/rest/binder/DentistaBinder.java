@@ -17,17 +17,22 @@ public class DentistaBinder implements Serializable {
 
 	private static final long serialVersionUID = -2268580869115475558L;
 
+	private UsuarioBinder usuarioBinder;
+
+	public DentistaBinder(UsuarioBinder usuarioBinder) {
+		this.usuarioBinder = usuarioBinder;
+	}
+
 	public Dentista requestToModel(DentistaRequest dentistaRequest) {
 		return new Dentista(dentistaRequest.getIdDentista(), dentistaRequest.getNome(),
 				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getConselho(),
 				dentistaRequest.getRegistro(), dentistaRequest.getCodigoBrasileiroOcupacao(),
-				new UsuarioBinder().requestToModel(dentistaRequest.getUsuarioRequest(),TipoProfissional.DENTISTA));
+				usuarioBinder.requestToModel(dentistaRequest.getUsuarioRequest(), TipoProfissional.DENTISTA));
 	}
 
 	public DentistaResponse modelToResponse(Dentista dentista) {
-		return new DentistaResponse(dentista.getIdDentista(),
-				new UsuarioBinder().modelToResponse(dentista.getUsuario()), dentista.getNome(),
-				dentista.getGenero().name(), dentista.getConselho(), dentista.getRegistro(),
+		return new DentistaResponse(dentista.getIdDentista(), usuarioBinder.modelToResponse(dentista.getUsuario()),
+				dentista.getNome(), dentista.getGenero().name(), dentista.getConselho(), dentista.getRegistro(),
 				dentista.getCodigoBrasileiroOcupacao());
 	}
 

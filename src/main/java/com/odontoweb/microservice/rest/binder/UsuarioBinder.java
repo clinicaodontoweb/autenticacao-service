@@ -2,16 +2,23 @@ package com.odontoweb.microservice.rest.binder;
 
 import java.util.stream.Collectors;
 
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+
 import com.odontoweb.arquitetura.model.User;
-import com.odontoweb.microservice.impl.model.Clinica;
 import com.odontoweb.microservice.impl.model.Usuario;
 import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
+import com.odontoweb.microservice.impl.service.ClinicaService;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.UsuarioResponse;
 
 public class UsuarioBinder {
 
-	public UsuarioBinder() {
+	private ClinicaService clinicaService;
+	private Md5PasswordEncoder encoder;
+	
+	public UsuarioBinder(ClinicaService clinicaService, Md5PasswordEncoder encoder) {
+		this.clinicaService = clinicaService;
+		this.encoder = encoder;
 	}
 
 	public User bindUser(Usuario usuario) {
@@ -28,22 +35,21 @@ public class UsuarioBinder {
 		usuarioResponse.setId(usuario.getId());
 		usuarioResponse.setEmail(usuario.getEmail());
 		usuarioResponse.setAdmin(usuario.getAdmin());
-		
 		usuarioResponse.setClinicas(new ClinicaBinder().bindToResponse(usuario.getClinicas()));
-//		usuarioResponse.setRoles(new RoleBinder().bindToResponse(usuario.getRoles()));
 
 		return usuarioResponse;
 	}
 
 	public Usuario requestToModel(UsuarioRequest usuarioRequest) {
 		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(),
-				usuarioRequest.getSenha(), usuarioRequest.getAdmin(),
+				encoder.encodePassword(usuarioRequest.getSenha(), null), usuarioRequest.getAdmin(),
 				TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}
 	
 	public Usuario requestToModel(UsuarioRequest usuarioRequest, TipoProfissional tipoProfissional) {
 		usuarioRequest.setTipoProfissional(tipoProfissional.name());
 		Usuario usuario = requestToModel(usuarioRequest);
+		usuario.setClinicas(clinicaService.getClinicasByIds(usuarioRequest.getClinicas()));
 		return usuario;
 	}
 }

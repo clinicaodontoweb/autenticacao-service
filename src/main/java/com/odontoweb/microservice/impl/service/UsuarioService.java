@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
 import com.odontoweb.microservice.exception.ClinicaNotFoundException;
-import com.odontoweb.microservice.exception.UsuarioNotFoundException;
+import com.odontoweb.microservice.exception.UsuarioOrPasswordWrongException;
 import com.odontoweb.microservice.impl.model.Usuario;
 import com.odontoweb.microservice.impl.repository.UsuarioRepository;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
@@ -26,7 +26,7 @@ public class UsuarioService {
 	public Usuario login(UsuarioRequest usuario) {
 		Usuario user = repository.findByEmailAndSenha(usuario.getEmail(),
 				encoder.encodePassword(usuario.getSenha(), null));
-		Optional.ofNullable(user).orElseThrow(UsuarioNotFoundException::new);
+		Optional.ofNullable(user).orElseThrow(UsuarioOrPasswordWrongException::new);
 		Optional.ofNullable(user.getClinicas()).orElseThrow(ClinicaNotFoundException::new);
 		if (user.getClinicas().isEmpty())
 			throw new ClinicaNotFoundException();
@@ -52,5 +52,10 @@ public class UsuarioService {
 
 	public boolean save(Usuario usuario) {
 		return repository.save(usuario) != null;
+	}
+	
+	public boolean usuarioExist(String email){
+		if(getByEmail(email) != null) return true;
+		return false;
 	}
 }

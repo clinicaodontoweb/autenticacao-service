@@ -17,9 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.eclipse.jetty.util.security.Credential.MD5;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
 
 import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
 
@@ -33,7 +33,7 @@ public class Usuario implements Serializable {
 	@Column(name = "ID")
 	private Long id;
 
-	@Column(name = "STR_EMAIL", unique = true)
+	@Column(name = "STR_EMAIL", unique = true, updatable = true, insertable = true, nullable = false)
 	private String email;
 
 	@Column(name = "STR_SENHA")
@@ -74,7 +74,7 @@ public class Usuario implements Serializable {
 			TipoProfissional tipoProfissional) {
 		this.id = id;
 		this.email = email;
-		this.senha = senha;
+		this.senha = MD5.digest(senha);
 		this.admin = admin;
 		this.tipoProfissional = tipoProfissional;
 

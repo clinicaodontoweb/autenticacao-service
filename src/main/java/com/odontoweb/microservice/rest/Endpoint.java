@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.eclipse.jetty.util.security.Credential.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.odontoweb.arquitetura.exception.response.ExceptionResponse;
 import com.odontoweb.arquitetura.model.User;
 import com.odontoweb.arquitetura.security.JWTAuthorizationUtil;
+import com.odontoweb.microservice.exception.UsuarioDuplicateFoundException;
+import com.odontoweb.microservice.exception.UsuarioNotFoundException;
 import com.odontoweb.microservice.impl.model.Clinica;
-import com.odontoweb.microservice.impl.model.Dentista;
-import com.odontoweb.microservice.impl.model.Recepcionista;
 import com.odontoweb.microservice.impl.model.Usuario;
-import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
 import com.odontoweb.microservice.impl.service.ClinicaService;
 import com.odontoweb.microservice.impl.service.DentistaService;
 import com.odontoweb.microservice.impl.service.RecepcionistaService;
@@ -97,31 +96,31 @@ public class Endpoint {
 
 	@RequestMapping(value = "/dentista", method = RequestMethod.POST)
 	public ResponseEntity<?> saveDentista(@RequestBody @Valid DentistaRequest dentistaRequest) {
-		Dentista dentista = dentistaBinder.requestToModel(dentistaRequest);
-		// TODO fazer a validacao. se existir usuario, soltar excecao
-		// Usuario usuario =
-		// usuarioService.getByEmail(dentistaRequest.getUsuarioRequest().getEmail());
-		List<Clinica> clinicas = clinicaService.getClinicasByIds(dentistaRequest.getUsuarioRequest().getClinicas());
-		dentista.getUsuario().setClinicas(clinicas);
-		dentistaService.save(dentista);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		try {
+			if (usuarioService.usuarioExist(dentistaRequest.getUsuarioRequest().getEmail())) {
+				throw new UsuarioDuplicateFoundException();
+			}
+			dentistaService.save(dentistaBinder.requestToModel(dentistaRequest));
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/dentista", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateDentista(@RequestBody @Valid DentistaRequest dentistaRequest,
 			Authentication authentication) {
-		User user = (User) authentication.getPrincipal();
-		Dentista dentista = dentistaBinder.requestToModel(dentistaRequest);
-		Usuario usuario = usuarioService.getByEmail(dentistaRequest.getUsuarioRequest().getEmail());
-		if (usuario == null) {
-			usuario = new Usuario();
-			usuario.setEmail(dentistaRequest.getUsuarioRequest().getEmail());
-			usuario.setTipoProfissional(TipoProfissional.DENTISTA);
-			usuario.setSenha(MD5.digest(dentistaRequest.getUsuarioRequest().getSenha()));
+		try {
+			if (!usuarioService.usuarioExist(dentistaRequest.getUsuarioRequest().getEmail())) {
+				throw new UsuarioNotFoundException();
+			}
+			dentistaService.save(dentistaBinder.requestToModel(dentistaRequest));
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 		}
-		dentista.setUsuario(usuario);
-		dentistaService.save(dentista);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/dentista/{id}", method = RequestMethod.GET)
@@ -131,7 +130,6 @@ public class Endpoint {
 
 	@RequestMapping(value = "/dentista/clinica/{cnpj}", method = RequestMethod.GET)
 	public ResponseEntity<List<DentistaResponse>> findAllDentistasByClinica(@PathVariable("cnpj") Long cnpj) {
-
 		return new ResponseEntity<List<DentistaResponse>>(
 				dentistaBinder.modelToListResponse(dentistaService.findAllDentistasByClinica(cnpj)), HttpStatus.OK);
 	}
@@ -145,43 +143,31 @@ public class Endpoint {
 	@RequestMapping(value = "/recepcionista", method = RequestMethod.POST)
 	public ResponseEntity<?> saveRecepcionista(@RequestBody @Valid RecepcionistaRequest recepcionistaRequest,
 			Authentication authentication) {
-		User user = (User) authentication.getPrincipal();
-		Recepcionista recepcionista = recepcionistaBinder.requestToModel(recepcionistaRequest);
-		Usuario usuario = usuarioService.getByEmail(recepcionistaRequest.getUsuarioRequest().getEmail());
-		if (usuario == null) {
-			usuario = new Usuario();
-			usuario.setEmail(recepcionistaRequest.getUsuarioRequest().getEmail());
-			usuario.setTipoProfissional(TipoProfissional.RECEPCIONISTA);
-			usuario.setSenha(MD5.digest(recepcionistaRequest.getUsuarioRequest().getSenha()));
+		try {
+			if (usuarioService.usuarioExist(recepcionistaRequest.getUsuarioRequest().getEmail())) {
+				throw new UsuarioDuplicateFoundException();
+			}
+			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaRequest));
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 		}
-		recepcionista.setUsuario(usuario);
-		if (recepcionistaRequest.getDentistas() != null && recepcionistaRequest.getDentistas().size() > 0) {
-			List<Dentista> dentistas = dentistaService.getListDentistas(recepcionistaRequest.getDentistas());
-			recepcionista.setDentistas(dentistas);
-		}
-		recepcionistaService.save(recepcionista, user.getUsername());
-		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/recepcionista", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateRecepcionista(@RequestBody @Valid RecepcionistaRequest recepcionistaRequest,
 			Authentication authentication) {
-		User user = (User) authentication.getPrincipal();
-		Recepcionista recepcionista = recepcionistaBinder.requestToModel(recepcionistaRequest);
-		Usuario usuario = usuarioService.getByEmail(recepcionistaRequest.getUsuarioRequest().getEmail());
-		if (usuario == null) {
-			usuario = new Usuario();
-			usuario.setEmail(recepcionistaRequest.getUsuarioRequest().getEmail());
-			usuario.setTipoProfissional(TipoProfissional.RECEPCIONISTA);
-			usuario.setSenha(MD5.digest(recepcionistaRequest.getUsuarioRequest().getSenha()));
+		try {
+			if (!usuarioService.usuarioExist(recepcionistaRequest.getUsuarioRequest().getEmail())) {
+				throw new UsuarioNotFoundException();
+			}
+			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaRequest));
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 		}
-		recepcionista.setUsuario(usuario);
-		if (recepcionistaRequest.getDentistas() != null && recepcionistaRequest.getDentistas().size() > 0) {
-			List<Dentista> dentistas = dentistaService.getListDentistas(recepcionistaRequest.getDentistas());
-			recepcionista.setDentistas(dentistas);
-		}
-		recepcionistaService.save(recepcionista, user.getUsername());
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/recepcionista/clinica/{cnpj}", method = RequestMethod.GET)
@@ -198,12 +184,17 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/usuario/clinica/dentista", method = RequestMethod.GET)
-	public ResponseEntity<ClinicasDentistasResponse> findAllClinicasDentistasByUsuario(Authentication authentication) {
-		User user = (User) authentication.getPrincipal();
-		Usuario usuario = usuarioService.getByEmail(user.getUsername());
-		if (usuario == null)
-			return null;
-		return new ResponseEntity<ClinicasDentistasResponse>(new DentistaBinder().modelToResponse(usuario.getClinicas(),
-				dentistaService.findAllDentistasByClinicas(usuario.getClinicas())), HttpStatus.OK);
+	public ResponseEntity<?> findAllClinicasDentistasByUsuario(Authentication authentication) {
+		try {
+			User user = (User) authentication.getPrincipal();
+			if (!usuarioService.usuarioExist(user.getUsername()))
+				throw new UsuarioNotFoundException();
+			Usuario usuario = usuarioService.getByEmail(user.getUsername());
+			return new ResponseEntity<ClinicasDentistasResponse>(dentistaBinder.modelToResponse(usuario.getClinicas(),
+					dentistaService.findAllDentistasByClinicas(usuario.getClinicas())), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 }

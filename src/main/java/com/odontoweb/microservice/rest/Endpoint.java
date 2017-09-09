@@ -69,29 +69,42 @@ public class Endpoint {
 	RecepcionistaBinder recepcionistaBinder;
 
 	@RequestMapping(value = "/auth", method = RequestMethod.POST)
-	public ResponseEntity<TokenResponse> authenticate(@RequestBody @Valid UsuarioRequest usuarioRequest) {
-		Usuario usuario = usuarioService.login(usuarioRequest);
-		User user = usuarioBinder.bindUser(usuario);
+	public ResponseEntity<?> authenticate(@RequestBody @Valid UsuarioRequest usuarioRequest) {
+		try {
+			Usuario usuario = usuarioService.login(usuarioRequest);
+			User user = usuarioBinder.bindUser(usuario);
 
-		return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
+			return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/auth/{id}", method = RequestMethod.GET)
-	public ResponseEntity<TokenResponse> updateToken(@PathVariable("id") Long idClinica,
-			Authentication authentication) {
-		Clinica clinica = clinicaService.getById(idClinica);
-		User user = (User) authentication.getPrincipal();
-		user.setTenant(clinica.getCnpj().toString());
+	public ResponseEntity<?> updateToken(@PathVariable("id") Long idClinica, Authentication authentication) {
+		try {
+			Clinica clinica = clinicaService.getById(idClinica);
+			User user = (User) authentication.getPrincipal();
+			user.setTenant(clinica.getCnpj().toString());
 
-		return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
+			return new ResponseEntity<TokenResponse>(new TokenResponse(jwtUtil.build(user)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/me", method = RequestMethod.GET)
-	public ResponseEntity<UsuarioResponse> me(Authentication authentication) {
-		User user = (User) authentication.getPrincipal();
-
-		return new ResponseEntity<UsuarioResponse>(
-				usuarioBinder.modelToResponse(usuarioService.getByEmail(user.getUsername())), HttpStatus.OK);
+	public ResponseEntity<?> me(Authentication authentication) {
+		try {
+			User user = (User) authentication.getPrincipal();
+			return new ResponseEntity<UsuarioResponse>(
+					usuarioBinder.modelToResponse(usuarioService.getByEmail(user.getUsername())), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/dentista", method = RequestMethod.POST)
@@ -124,20 +137,35 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/dentista/{id}", method = RequestMethod.GET)
-	public ResponseEntity<DentistaResponse> findDentistaById(@PathVariable("id") Long id) {
-		return new ResponseEntity<>(dentistaBinder.modelToResponse(dentistaService.findById(id)), HttpStatus.OK);
+	public ResponseEntity<?> findDentistaById(@PathVariable("id") Long id) {
+		try {
+			return new ResponseEntity<>(dentistaBinder.modelToResponse(dentistaService.findById(id)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/dentista/clinica/{cnpj}", method = RequestMethod.GET)
-	public ResponseEntity<List<DentistaResponse>> findAllDentistasByClinica(@PathVariable("cnpj") Long cnpj) {
-		return new ResponseEntity<List<DentistaResponse>>(
-				dentistaBinder.modelToListResponse(dentistaService.findAllDentistasByClinica(cnpj)), HttpStatus.OK);
+	public ResponseEntity<?> findAllDentistasByClinica(@PathVariable("cnpj") Long cnpj) {
+		try {
+			return new ResponseEntity<List<DentistaResponse>>(
+					dentistaBinder.modelToListResponse(dentistaService.findAllDentistasByClinica(cnpj)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/dentista/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteDentista(@PathVariable("id") Long id) {
-		dentistaService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			dentistaService.delete(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/recepcionista", method = RequestMethod.POST)
@@ -171,16 +199,26 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/recepcionista/clinica/{cnpj}", method = RequestMethod.GET)
-	public ResponseEntity<List<RecepcionistaResponse>> findAllRecepcionistasByClinica(@PathVariable("cnpj") Long cnpj) {
-		return new ResponseEntity<List<RecepcionistaResponse>>(
-				recepcionistaBinder.modelToListResponse(recepcionistaService.findAllRecepcionistasByClinica(cnpj)),
-				HttpStatus.OK);
+	public ResponseEntity<?> findAllRecepcionistasByClinica(@PathVariable("cnpj") Long cnpj) {
+		try {
+			return new ResponseEntity<List<RecepcionistaResponse>>(
+					recepcionistaBinder.modelToListResponse(recepcionistaService.findAllRecepcionistasByClinica(cnpj)),
+					HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/recepcionista/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteRecepcionista(@PathVariable("id") Long id) {
-		recepcionistaService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			recepcionistaService.delete(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(value = "/usuario/clinica/dentista", method = RequestMethod.GET)

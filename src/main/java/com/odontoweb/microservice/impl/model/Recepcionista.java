@@ -34,7 +34,7 @@ public class Recepcionista implements Serializable {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_USUARIO", unique = true)
 	private Usuario usuario;
-
+	
 	@Column(name = "STR_NOME")
 	private String nome;
 

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.odontoweb.microservice.impl.model.Recepcionista;
 import com.odontoweb.microservice.impl.model.enums.Genero;
+import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
 import com.odontoweb.microservice.impl.service.DentistaService;
 import com.odontoweb.microservice.rest.domain.request.RecepcionistaRequest;
 import com.odontoweb.microservice.rest.domain.response.RecepcionistaResponse;
@@ -29,8 +30,8 @@ public class RecepcionistaBinder implements Serializable {
 		if (recepcionistaRequest == null)
 			return null;
 		return new Recepcionista(recepcionistaRequest.getIdRecepcionista(),
-				usuarioBinder.requestToModel(recepcionistaRequest.getUsuarioRequest()), recepcionistaRequest.getNome(),
-				Genero.valueOf(recepcionistaRequest.getGenero()), dentistaService.getListDentistas(recepcionistaRequest.getDentistas()));
+				usuarioBinder.requestToModel(recepcionistaRequest.getUsuarioRequest(), TipoProfissional.RECEPCIONISTA), recepcionistaRequest.getNome(),
+				Genero.valueOf(recepcionistaRequest.getGenero().toUpperCase()), dentistaService.getListDentistas(recepcionistaRequest.getDentistas()));
 	}
 
 	public RecepcionistaResponse modelToResponse(Recepcionista recepcionista) {

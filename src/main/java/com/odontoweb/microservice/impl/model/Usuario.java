@@ -74,7 +74,7 @@ public class Usuario implements Serializable {
 			TipoProfissional tipoProfissional) {
 		this.id = id;
 		this.email = email;
-		this.senha = MD5.digest(senha);
+		this.senha = senha;
 		this.admin = admin;
 		this.tipoProfissional = tipoProfissional;
 

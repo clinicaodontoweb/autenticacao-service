@@ -3,16 +3,18 @@ package com.odontoweb.microservice.rest.domain.response;
 import java.io.Serializable;
 import java.util.List;
 
-public class UsuarioResponse implements Serializable{
+public class UsuarioResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String email;
+	private String hashKey;
 	private Boolean admin;
 	private List<RoleResponse> roles;
 	private List<ClinicaResponse> clinicas;
-	
-	public UsuarioResponse() {}
+
+	public UsuarioResponse() {
+	}
 
 	public Long getId() {
 		return id;
@@ -53,5 +55,13 @@ public class UsuarioResponse implements Serializable{
 	public void setClinicas(List<ClinicaResponse> clinicas) {
 		this.clinicas = clinicas;
 	}
-	
+
+	public String getHashKey() {
+		return hashKey;
+	}
+
+	public void setHashKey(String hashKey) {
+		this.hashKey = hashKey;
+	}
+
 }

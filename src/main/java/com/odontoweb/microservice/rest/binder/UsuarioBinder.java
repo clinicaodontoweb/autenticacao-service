@@ -15,25 +15,25 @@ public class UsuarioBinder {
 
 	private ClinicaService clinicaService;
 	private Md5PasswordEncoder encoder;
-	
+
 	public UsuarioBinder(ClinicaService clinicaService, Md5PasswordEncoder encoder) {
 		this.clinicaService = clinicaService;
 		this.encoder = encoder;
 	}
 
 	public User bindUser(Usuario usuario) {
-		return new User(usuario.getEmail(),
-				usuario.getClinicas().get(0).getCnpj().toString(),
-				usuario.getTipoProfissional().toString(),
-				usuario.getAdmin(),
+		return new User(usuario.getEmail(), usuario.getClinicas().get(0).getCnpj().toString(),
+				usuario.getTipoProfissional().toString(), usuario.getAdmin(),
 				usuario.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toList()));
 	}
 
 	public UsuarioResponse modelToResponse(Usuario usuario) {
-		if(usuario == null ) return null;
+		if (usuario == null)
+			return null;
 		UsuarioResponse usuarioResponse = new UsuarioResponse();
 		usuarioResponse.setId(usuario.getId());
 		usuarioResponse.setEmail(usuario.getEmail());
+		usuarioResponse.setHashKey(usuario.getHashKey());
 		usuarioResponse.setAdmin(usuario.getAdmin());
 		usuarioResponse.setTipoProfissional(usuario.getTipoProfissional().toString());
 		usuarioResponse.setClinicas(new ClinicaBinder().bindToResponse(usuario.getClinicas()));
@@ -43,10 +43,11 @@ public class UsuarioBinder {
 
 	public Usuario requestToModel(UsuarioRequest usuarioRequest) {
 		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(),
-				encoder.encodePassword(usuarioRequest.getSenha(), null), usuarioRequest.getAdmin(),
-				TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
+				encoder.encodePassword(usuarioRequest.getSenha(), null),
+				encoder.encodePassword(usuarioRequest.getEmail().concat(usuarioRequest.getSenha()), null),
+				usuarioRequest.getAdmin(), TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}
-	
+
 	public Usuario requestToModel(UsuarioRequest usuarioRequest, TipoProfissional tipoProfissional) {
 		usuarioRequest.setTipoProfissional(tipoProfissional.name());
 		Usuario usuario = requestToModel(usuarioRequest);

@@ -17,7 +17,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.eclipse.jetty.util.security.Credential.MD5;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -46,6 +45,9 @@ public class Usuario implements Serializable {
 	@Column(name = "STR_TIPO_PROFISSIONAL")
 	private TipoProfissional tipoProfissional;
 
+	@Column(name = "STR_HASH_KEY")
+	private String hashKey;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	@JoinTable(name = "TBL_USUARIO_ROLE", joinColumns = {
@@ -63,18 +65,20 @@ public class Usuario implements Serializable {
 	public Usuario() {
 	}
 
-	public Usuario(String email, String senha, TipoProfissional tipoProfissional) {
+	public Usuario(String email, String senha, String hashKey, TipoProfissional tipoProfissional) {
 		this.email = email;
 		this.senha = senha;
+		this.hashKey = hashKey;
 		this.admin = Boolean.FALSE;
 		this.tipoProfissional = tipoProfissional;
 	}
 
-	public Usuario(Long id, String email, String senha, Boolean admin,
+	public Usuario(Long id, String email, String senha, String hashKey, Boolean admin,
 			TipoProfissional tipoProfissional) {
 		this.id = id;
 		this.email = email;
 		this.senha = senha;
+		this.hashKey = hashKey;
 		this.admin = admin;
 		this.tipoProfissional = tipoProfissional;
 
@@ -134,6 +138,14 @@ public class Usuario implements Serializable {
 
 	public void setTipoProfissional(TipoProfissional tipoProfissional) {
 		this.tipoProfissional = tipoProfissional;
+	}
+
+	public String getHashKey() {
+		return hashKey;
+	}
+
+	public void setHashKey(String hashKey) {
+		this.hashKey = hashKey;
 	}
 
 	@Override

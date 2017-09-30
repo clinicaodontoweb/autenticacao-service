@@ -9,6 +9,7 @@ public class UsuarioResponse implements Serializable{
 	private Long id;
 	private String email;
 	private Boolean admin;
+	private String tipoProfissional;
 	private List<RoleResponse> roles;
 	private List<ClinicaResponse> clinicas;
 	
@@ -53,5 +54,12 @@ public class UsuarioResponse implements Serializable{
 	public void setClinicas(List<ClinicaResponse> clinicas) {
 		this.clinicas = clinicas;
 	}
-	
+
+    public String getTipoProfissional() {
+        return tipoProfissional;
+    }
+
+    public void setTipoProfissional(String tipoProfissional) {
+        this.tipoProfissional = tipoProfissional;
+    }
 }

@@ -35,6 +35,7 @@ public class UsuarioBinder {
 		usuarioResponse.setId(usuario.getId());
 		usuarioResponse.setEmail(usuario.getEmail());
 		usuarioResponse.setAdmin(usuario.getAdmin());
+		usuarioResponse.setTipoProfissional(usuario.getTipoProfissional().toString());
 		usuarioResponse.setClinicas(new ClinicaBinder().bindToResponse(usuario.getClinicas()));
 
 		return usuarioResponse;

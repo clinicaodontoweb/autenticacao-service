@@ -20,15 +20,15 @@ compileJava {
 }
 
 repositories {
-	mavenLocal()
+	//mavenLocal()
 	mavenCentral()
-	/*maven {
+	maven {
 		url 'https://mymavenrepo.com/repo/86tbDOIwNwIx7D3vYwd7/'
-	}*/
+	}
 }
 
 dependencies {
-	compile 'com.odontoweb.microservices:arch:1.0'
+	compile 'com.odontoweb.microservices:arch:2.0'
 }
 
 springBoot {

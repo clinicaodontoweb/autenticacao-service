@@ -29,7 +29,9 @@ import com.odontoweb.microservice.impl.service.UsuarioService;
 import com.odontoweb.microservice.rest.binder.DentistaBinder;
 import com.odontoweb.microservice.rest.binder.RecepcionistaBinder;
 import com.odontoweb.microservice.rest.binder.UsuarioBinder;
+import com.odontoweb.microservice.rest.domain.request.DentistaEditRequest;
 import com.odontoweb.microservice.rest.domain.request.DentistaRequest;
+import com.odontoweb.microservice.rest.domain.request.RecepcionistaEditRequest;
 import com.odontoweb.microservice.rest.domain.request.RecepcionistaRequest;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.ClinicasDentistasResponse;
@@ -122,13 +124,13 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/dentista", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateDentista(@RequestBody @Valid DentistaRequest dentistaRequest,
+	public ResponseEntity<?> updateDentista(@RequestBody @Valid DentistaEditRequest dentistaEditRequest,
 			Authentication authentication) {
 		try {
-			if (!usuarioService.usuarioExist(dentistaRequest.getUsuarioRequest().getEmail())) {
+			if (!usuarioService.usuarioExist(dentistaEditRequest.getUsuarioEditRequest().getEmail())) {
 				throw new UsuarioNotFoundException();
 			}
-			dentistaService.save(dentistaBinder.requestToModel(dentistaRequest));
+			dentistaService.save(dentistaBinder.requestToModel(dentistaEditRequest));
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<ExceptionResponse>(
@@ -184,13 +186,13 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/recepcionista", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateRecepcionista(@RequestBody @Valid RecepcionistaRequest recepcionistaRequest,
+	public ResponseEntity<?> updateRecepcionista(@RequestBody @Valid RecepcionistaEditRequest recepcionistaEditRequest,
 			Authentication authentication) {
 		try {
-			if (!usuarioService.usuarioExist(recepcionistaRequest.getUsuarioRequest().getEmail())) {
+			if (!usuarioService.usuarioExist(recepcionistaEditRequest.getUsuarioEditRequest().getEmail())) {
 				throw new UsuarioNotFoundException();
 			}
-			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaRequest));
+			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaEditRequest));
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<ExceptionResponse>(

@@ -6,13 +6,13 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class UsuarioRequest implements Serializable {
+public class UsuarioEditRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private Boolean admin;
 	private String tipoProfissional;
-
+	
 	@NotNull(message = "Email é obrigatório")
 	@Size(min = 1, max = 100, message = "Tamanho do email deve ser entre 1 e 100")
 	private String email;
@@ -20,30 +20,9 @@ public class UsuarioRequest implements Serializable {
 	@NotNull(message = "Senha é obrigatório")
 	private String senha;
 
-	List<Long> clinicas;
+	private List<ClinicaRequest> clinicas;
 
-	public UsuarioRequest() {
-	}
-
-	public UsuarioRequest(String email, String senha) {
-		this.email = email;
-		this.senha = senha;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public UsuarioEditRequest() {
 	}
 
 	public Long getId() {
@@ -54,12 +33,28 @@ public class UsuarioRequest implements Serializable {
 		this.id = id;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Boolean getAdmin() {
 		return admin;
 	}
 
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
+	}
+
+	public List<ClinicaRequest> getClinicas() {
+		return clinicas;
+	}
+
+	public void setClinicas(List<ClinicaRequest> clinicas) {
+		this.clinicas = clinicas;
 	}
 
 	public String getTipoProfissional() {
@@ -70,12 +65,12 @@ public class UsuarioRequest implements Serializable {
 		this.tipoProfissional = tipoProfissional;
 	}
 
-	public List<Long> getClinicas() {
-		return clinicas;
+	public String getSenha() {
+		return senha;
 	}
 
-	public void setClinicas(List<Long> clinicas) {
-		this.clinicas = clinicas;
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 }

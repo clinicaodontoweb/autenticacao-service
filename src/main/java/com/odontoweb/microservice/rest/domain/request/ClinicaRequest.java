@@ -1,18 +1,19 @@
-package com.odontoweb.microservice.rest.domain.response;
+package com.odontoweb.microservice.rest.domain.request;
 
 import java.io.Serializable;
 
-public class ClinicaResponse implements Serializable {
+public class ClinicaRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String nome;
 	private Long cnpj;
+	private Boolean ativo;
 
-	public ClinicaResponse() {
+	public ClinicaRequest() {
 	}
 
-	public ClinicaResponse(Long id, String nome, Long cnpj) {
+	public ClinicaRequest(Long id, String nome, Long cnpj) {
 		this.id = id;
 		this.nome = nome;
 		this.cnpj = cnpj;
@@ -40,6 +41,14 @@ public class ClinicaResponse implements Serializable {
 
 	public void setCnpj(Long cnpj) {
 		this.cnpj = cnpj;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
 }

@@ -29,6 +29,13 @@ public class Clinica implements Serializable{
 	@Column(name = "BOO_ATIVO")
 	private Boolean ativo;
 	
+	public Clinica(Long id, String nome, Long cnpj, Boolean ativo) {
+		this.id = id;
+		this.nome = nome;
+		this.cnpj = cnpj;
+		this.ativo = ativo;
+	}
+	
 	public Clinica() {}
 
 	public Long getId() {

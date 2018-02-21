@@ -8,6 +8,7 @@ import com.odontoweb.arquitetura.model.User;
 import com.odontoweb.microservice.impl.model.Usuario;
 import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
 import com.odontoweb.microservice.impl.service.ClinicaService;
+import com.odontoweb.microservice.rest.domain.request.UsuarioEditRequest;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.UsuarioResponse;
 
@@ -36,22 +37,36 @@ public class UsuarioBinder {
 		usuarioResponse.setHashKey(usuario.getHashKey());
 		usuarioResponse.setAdmin(usuario.getAdmin());
 		usuarioResponse.setTipoProfissional(usuario.getTipoProfissional().toString());
-		usuarioResponse.setClinicas(new ClinicaBinder().bindToResponse(usuario.getClinicas()));
+		usuarioResponse.setClinicas(new ClinicaBinder().modelToListResponse(usuario.getClinicas()));
 
 		return usuarioResponse;
 	}
 
-	public Usuario requestToModel(UsuarioRequest usuarioRequest) {
+	private Usuario requestToModel(UsuarioRequest usuarioRequest) {
 		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(),
 				encoder.encodePassword(usuarioRequest.getSenha(), null),
 				encoder.encodePassword(usuarioRequest.getEmail().concat(usuarioRequest.getSenha()), null),
 				usuarioRequest.getAdmin(), TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
+	}
+	
+	private Usuario requestToModel(UsuarioEditRequest usuarioEditRequest) {
+		return new Usuario(usuarioEditRequest.getId(), usuarioEditRequest.getEmail(),
+				encoder.encodePassword(usuarioEditRequest.getSenha(), null),
+				encoder.encodePassword(usuarioEditRequest.getEmail().concat(usuarioEditRequest.getSenha()), null),
+				usuarioEditRequest.getAdmin(), TipoProfissional.valueOf(usuarioEditRequest.getTipoProfissional()));
 	}
 
 	public Usuario requestToModel(UsuarioRequest usuarioRequest, TipoProfissional tipoProfissional) {
 		usuarioRequest.setTipoProfissional(tipoProfissional.name());
 		Usuario usuario = requestToModel(usuarioRequest);
 		usuario.setClinicas(clinicaService.getClinicasByIds(usuarioRequest.getClinicas()));
+		return usuario;
+	}
+	
+	public Usuario requestToModel(UsuarioEditRequest usuarioEditRequest, TipoProfissional tipoProfissional) {
+		usuarioEditRequest.setTipoProfissional(tipoProfissional.name());
+		Usuario usuario = requestToModel(usuarioEditRequest);
+		usuario.setClinicas(new ClinicaBinder().requestToListModel(usuarioEditRequest.getClinicas()));
 		return usuario;
 	}
 }

@@ -9,6 +9,7 @@ import com.odontoweb.microservice.impl.model.Clinica;
 import com.odontoweb.microservice.impl.model.Dentista;
 import com.odontoweb.microservice.impl.model.enums.Genero;
 import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
+import com.odontoweb.microservice.rest.domain.request.DentistaEditRequest;
 import com.odontoweb.microservice.rest.domain.request.DentistaRequest;
 import com.odontoweb.microservice.rest.domain.response.ClinicasDentistasResponse;
 import com.odontoweb.microservice.rest.domain.response.DentistaResponse;
@@ -28,6 +29,13 @@ public class DentistaBinder implements Serializable {
 				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getConselho(),
 				dentistaRequest.getRegistro(), dentistaRequest.getCodigoBrasileiroOcupacao(),
 				usuarioBinder.requestToModel(dentistaRequest.getUsuarioRequest(), TipoProfissional.DENTISTA));
+	}
+	
+	public Dentista requestToModel(DentistaEditRequest dentistaEditRequest) {
+		return new Dentista(dentistaEditRequest.getIdDentista(), dentistaEditRequest.getNome(),
+				Genero.valueOf(dentistaEditRequest.getGenero().toUpperCase()), dentistaEditRequest.getConselho(),
+				dentistaEditRequest.getRegistro(), dentistaEditRequest.getCodigoBrasileiroOcupacao(),
+				usuarioBinder.requestToModel(dentistaEditRequest.getUsuarioEditRequest(), TipoProfissional.DENTISTA));
 	}
 
 	public DentistaResponse modelToResponse(Dentista dentista) {
@@ -51,11 +59,19 @@ public class DentistaBinder implements Serializable {
 				.map(dentistaRequest -> requestToModel(dentistaRequest)).collect(Collectors.toList());
 
 	}
+	
+	public List<Dentista> requestEditToListModel(List<DentistaEditRequest> dentistasEditRequest) {
+		if (dentistasEditRequest == null)
+			return null;
+		return dentistasEditRequest.stream().filter(Objects::nonNull)
+				.map(dentistaEditRequest -> requestToModel(dentistaEditRequest)).collect(Collectors.toList());
+
+	}
 
 	public ClinicasDentistasResponse modelToResponse(List<Clinica> clinicas, List<Dentista> dentistas) {
 		if (clinicas == null || dentistas == null)
 			return null;
-		return new ClinicasDentistasResponse(new ClinicaBinder().bindToResponse(clinicas),
+		return new ClinicasDentistasResponse(new ClinicaBinder().modelToListResponse(clinicas),
 				modelToListResponse(dentistas));
 	}
 }

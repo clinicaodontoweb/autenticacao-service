@@ -13,11 +13,11 @@ public class UsuarioEditRequest implements Serializable {
 	private Boolean admin;
 	private String tipoProfissional;
 	
-	@NotNull(message = "Email é obrigatório")
+	@NotNull(message = "Email Ã© obrigatÃ³rio")
 	@Size(min = 1, max = 100, message = "Tamanho do email deve ser entre 1 e 100")
 	private String email;
 
-	@NotNull(message = "Senha é obrigatório")
+	@NotNull(message = "Senha Ã© obrigatÃ³rio")
 	private String senha;
 
 	private List<ClinicaRequest> clinicas;

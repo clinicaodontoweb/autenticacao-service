@@ -22,9 +22,9 @@ compileJava {
 repositories {
 	mavenLocal()
 	mavenCentral()
-//	maven {
-//		url 'https://mymavenrepo.com/repo/86tbDOIwNwIx7D3vYwd7/'
-//	}
+	maven {
+		url 'https://mymavenrepo.com/repo/86tbDOIwNwIx7D3vYwd7/'
+	}
 }
 
 dependencies {

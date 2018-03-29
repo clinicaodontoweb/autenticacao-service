@@ -39,27 +39,23 @@ public class Dentista implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Genero genero;
 
-	@Column(name = "STR_CONSELHO")
-	private String conselho;
-
 	@Column(name = "STR_REGISTRO")
 	private String registro;
 
-	@Column(name = "STR_CODIGO_BRASILEIRO_OCUPACAO")
-	private String codigoBrasileiroOcupacao;
+	@Column(name = "BOO_ATIVO")
+	private Boolean ativo;
 
 	public Dentista() {
+		this.ativo = Boolean.TRUE;
 	}
 
-	public Dentista(Long idDentista, String nome, Genero genero, String conselho, String registro,
-			String codigoBrasileiroOcupacao, Usuario usuario) {
+	public Dentista(Long idDentista, String nome, Genero genero, String registro, Usuario usuario, Boolean ativo) {
 		this.idDentista = idDentista;
 		this.nome = nome;
 		this.genero = genero;
-		this.conselho = conselho;
 		this.registro = registro;
-		this.codigoBrasileiroOcupacao = codigoBrasileiroOcupacao;
 		this.usuario = usuario;
+		this.ativo = ativo;
 	}
 
 	public Long getIdDentista() {
@@ -86,14 +82,6 @@ public class Dentista implements Serializable {
 		this.genero = genero;
 	}
 
-	public String getConselho() {
-		return conselho;
-	}
-
-	public void setConselho(String conselho) {
-		this.conselho = conselho;
-	}
-
 	public String getRegistro() {
 		return registro;
 	}
@@ -102,20 +90,20 @@ public class Dentista implements Serializable {
 		this.registro = registro;
 	}
 
-	public String getCodigoBrasileiroOcupacao() {
-		return codigoBrasileiroOcupacao;
-	}
-
-	public void setCodigoBrasileiroOcupacao(String codigoBrasileiroOcupacao) {
-		this.codigoBrasileiroOcupacao = codigoBrasileiroOcupacao;
-	}
-
 	public Usuario getUsuario() {
 		return usuario;
 	}
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
 	@Override
@@ -146,8 +134,7 @@ public class Dentista implements Serializable {
 	@Override
 	public String toString() {
 		return "Dentista [id=" + idDentista + ", usuario=" + usuario + ", nome=" + nome + ", genero=" + genero
-				+ ", conselho=" + conselho + ", registro=" + registro + ", codigoBrasileiroOcupacao="
-				+ codigoBrasileiroOcupacao + "]";
+				+ ", registro=" + registro + ", ativo=" + ativo + "]";
 	}
 
 }

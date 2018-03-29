@@ -10,22 +10,19 @@ public class DentistaEditRequest implements Serializable {
 	private UsuarioEditRequest usuarioEditRequest;
 	private String nome;
 	private String genero;
-	private String conselho;
 	private String registro;
-	private String codigoBrasileiroOcupacao;
+	private Boolean ativo;
 
 	public DentistaEditRequest() {
 	}
 
 	public DentistaEditRequest(Long idDentista, UsuarioEditRequest usuarioEditRequest, String nome, String genero,
-			String conselho, String registro, String codigoBrasileiroOcupacao) {
+			String registro, Boolean ativo) {
 		this.idDentista = idDentista;
 		this.usuarioEditRequest = usuarioEditRequest;
 		this.nome = nome;
 		this.genero = genero;
-		this.conselho = conselho;
 		this.registro = registro;
-		this.codigoBrasileiroOcupacao = codigoBrasileiroOcupacao;
 	}
 
 	public Long getIdDentista() {
@@ -60,14 +57,6 @@ public class DentistaEditRequest implements Serializable {
 		this.genero = genero;
 	}
 
-	public String getConselho() {
-		return conselho;
-	}
-
-	public void setConselho(String conselho) {
-		this.conselho = conselho;
-	}
-
 	public String getRegistro() {
 		return registro;
 	}
@@ -76,12 +65,12 @@ public class DentistaEditRequest implements Serializable {
 		this.registro = registro;
 	}
 
-	public String getCodigoBrasileiroOcupacao() {
-		return codigoBrasileiroOcupacao;
+	public Boolean getAtivo() {
+		return ativo;
 	}
 
-	public void setCodigoBrasileiroOcupacao(String codigoBrasileiroOcupacao) {
-		this.codigoBrasileiroOcupacao = codigoBrasileiroOcupacao;
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
 }

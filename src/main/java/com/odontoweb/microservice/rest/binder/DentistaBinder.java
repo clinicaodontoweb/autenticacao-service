@@ -26,22 +26,21 @@ public class DentistaBinder implements Serializable {
 
 	public Dentista requestToModel(DentistaRequest dentistaRequest) {
 		return new Dentista(dentistaRequest.getIdDentista(), dentistaRequest.getNome(),
-				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getConselho(),
-				dentistaRequest.getRegistro(), dentistaRequest.getCodigoBrasileiroOcupacao(),
-				usuarioBinder.requestToModel(dentistaRequest.getUsuarioRequest(), TipoProfissional.DENTISTA));
+				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getRegistro(),
+				usuarioBinder.requestToModel(dentistaRequest.getUsuarioRequest(), TipoProfissional.DENTISTA),
+				dentistaRequest.getAtivo());
 	}
-	
+
 	public Dentista requestToModel(DentistaEditRequest dentistaEditRequest) {
 		return new Dentista(dentistaEditRequest.getIdDentista(), dentistaEditRequest.getNome(),
-				Genero.valueOf(dentistaEditRequest.getGenero().toUpperCase()), dentistaEditRequest.getConselho(),
-				dentistaEditRequest.getRegistro(), dentistaEditRequest.getCodigoBrasileiroOcupacao(),
-				usuarioBinder.requestToModel(dentistaEditRequest.getUsuarioEditRequest(), TipoProfissional.DENTISTA));
+				Genero.valueOf(dentistaEditRequest.getGenero().toUpperCase()), dentistaEditRequest.getRegistro(),
+				usuarioBinder.requestToModel(dentistaEditRequest.getUsuarioEditRequest(), TipoProfissional.DENTISTA),
+				dentistaEditRequest.getAtivo());
 	}
 
 	public DentistaResponse modelToResponse(Dentista dentista) {
 		return new DentistaResponse(dentista.getIdDentista(), usuarioBinder.modelToResponse(dentista.getUsuario()),
-				dentista.getNome(), dentista.getGenero().name(), dentista.getConselho(), dentista.getRegistro(),
-				dentista.getCodigoBrasileiroOcupacao());
+				dentista.getNome(), dentista.getGenero().name(), dentista.getRegistro(), dentista.getAtivo());
 	}
 
 	public List<DentistaResponse> modelToListResponse(List<Dentista> dentistas) {
@@ -59,7 +58,7 @@ public class DentistaBinder implements Serializable {
 				.map(dentistaRequest -> requestToModel(dentistaRequest)).collect(Collectors.toList());
 
 	}
-	
+
 	public List<Dentista> requestEditToListModel(List<DentistaEditRequest> dentistasEditRequest) {
 		if (dentistasEditRequest == null)
 			return null;

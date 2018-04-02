@@ -115,6 +115,7 @@ public class Endpoint {
 			if (usuarioService.usuarioExist(dentistaRequest.getUsuarioRequest().getEmail())) {
 				throw new UsuarioDuplicateFoundException();
 			}
+			dentistaRequest.setAtivo(Boolean.TRUE);
 			dentistaService.save(dentistaBinder.requestToModel(dentistaRequest));
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {

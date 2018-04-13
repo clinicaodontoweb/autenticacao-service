@@ -223,6 +223,16 @@ public class Endpoint {
 					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@RequestMapping(value = "/recepcionista/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getRecepcionista(@PathVariable("id") Long id) {
+		try {
+			return new ResponseEntity<>(recepcionistaBinder.modelToResponse(recepcionistaService.findById(id)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@RequestMapping(value = "/usuario/clinica/dentista", method = RequestMethod.GET)
 	public ResponseEntity<?> findAllClinicasDentistasByUsuario(Authentication authentication) {

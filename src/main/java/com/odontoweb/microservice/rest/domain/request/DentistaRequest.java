@@ -16,15 +16,11 @@ public class DentistaRequest implements Serializable {
 	@NotNull(message = "Gênero é obrigatório!")
 	private String genero;
 
-	@NotNull(message = "Conselho é obrigatório!")
-	private String conselho;
 
 	@NotNull(message = "Registro é obrigatório!")
 	private String registro;
 
 	private UsuarioRequest usuarioRequest;
-
-	private String codigoBrasileiroOcupacao;
 
 	private Boolean ativo;
 
@@ -52,28 +48,12 @@ public class DentistaRequest implements Serializable {
 		this.genero = genero;
 	}
 
-	public String getConselho() {
-		return conselho;
-	}
-
-	public void setConselho(String conselho) {
-		this.conselho = conselho;
-	}
-
 	public String getRegistro() {
 		return registro;
 	}
 
 	public void setRegistro(String registro) {
 		this.registro = registro;
-	}
-
-	public String getCodigoBrasileiroOcupacao() {
-		return codigoBrasileiroOcupacao;
-	}
-
-	public void setCodigoBrasileiroOcupacao(String codigoBrasileiroOcupacao) {
-		this.codigoBrasileiroOcupacao = codigoBrasileiroOcupacao;
 	}
 
 	public UsuarioRequest getUsuarioRequest() {

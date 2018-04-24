@@ -16,11 +16,10 @@ public class DentistaRequest implements Serializable {
 	@NotNull(message = "Gênero é obrigatório!")
 	private String genero;
 
-
 	@NotNull(message = "Registro é obrigatório!")
 	private String registro;
 
-	private UsuarioRequest usuarioRequest;
+	private UsuarioRequest usuario;
 
 	private Boolean ativo;
 
@@ -56,12 +55,12 @@ public class DentistaRequest implements Serializable {
 		this.registro = registro;
 	}
 
-	public UsuarioRequest getUsuarioRequest() {
-		return usuarioRequest;
+	public UsuarioRequest getUsuario() {
+		return usuario;
 	}
 
-	public void setUsuarioRequest(UsuarioRequest usuarioRequest) {
-		this.usuarioRequest = usuarioRequest;
+	public void setUsuario(UsuarioRequest usuario) {
+		this.usuario = usuario;
 	}
 
 	public Boolean getAtivo() {

@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 import com.odontoweb.microservice.impl.model.Recepcionista;
 import com.odontoweb.microservice.impl.model.enums.Genero;
 import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
-import com.odontoweb.microservice.impl.service.DentistaService;
-import com.odontoweb.microservice.rest.domain.request.RecepcionistaEditRequest;
 import com.odontoweb.microservice.rest.domain.request.RecepcionistaRequest;
 import com.odontoweb.microservice.rest.domain.response.RecepcionistaResponse;
 
@@ -19,33 +17,19 @@ public class RecepcionistaBinder implements Serializable {
 
 	private UsuarioBinder usuarioBinder;
 	private DentistaBinder dentistaBinder;
-	private DentistaService dentistaService;
 
-	public RecepcionistaBinder(UsuarioBinder usuarioBinder, DentistaBinder dentistaBinder,
-			DentistaService dentistaService) {
+	public RecepcionistaBinder(UsuarioBinder usuarioBinder, DentistaBinder dentistaBinder) {
 		this.usuarioBinder = usuarioBinder;
 		this.dentistaBinder = dentistaBinder;
-		this.dentistaService = dentistaService;
 	}
 
 	public Recepcionista requestToModel(RecepcionistaRequest recepcionistaRequest) {
 		if (recepcionistaRequest == null)
 			return null;
 		return new Recepcionista(recepcionistaRequest.getIdRecepcionista(),
-				usuarioBinder.requestToModel(recepcionistaRequest.getUsuarioRequest(), TipoProfissional.RECEPCIONISTA),
+				usuarioBinder.requestToModel(recepcionistaRequest.getUsuario(), TipoProfissional.RECEPCIONISTA),
 				recepcionistaRequest.getNome(), Genero.valueOf(recepcionistaRequest.getGenero().toUpperCase()),
-				dentistaService.getListDentistas(recepcionistaRequest.getDentistas()));
-	}
-
-	public Recepcionista requestToModel(RecepcionistaEditRequest recepcionistaEditRequest) {
-		if (recepcionistaEditRequest == null)
-			return null;
-		return new Recepcionista(recepcionistaEditRequest.getIdRecepcionista(),
-				usuarioBinder.requestToModel(recepcionistaEditRequest.getUsuarioEditRequest(),
-						TipoProfissional.RECEPCIONISTA),
-				recepcionistaEditRequest.getNome(), Genero.valueOf(recepcionistaEditRequest.getGenero().toUpperCase()),
-				new DentistaBinder(usuarioBinder)
-						.requestEditToListModel(recepcionistaEditRequest.getDentistasEditRequest()));
+				dentistaBinder.requestToListModel(recepcionistaRequest.getDentistas()));
 	}
 
 	public RecepcionistaResponse modelToResponse(Recepcionista recepcionista) {

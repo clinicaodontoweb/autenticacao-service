@@ -26,12 +26,11 @@ import com.odontoweb.microservice.impl.service.DentistaService;
 import com.odontoweb.microservice.impl.service.RecepcionistaService;
 import com.odontoweb.microservice.impl.service.RoleService;
 import com.odontoweb.microservice.impl.service.UsuarioService;
+import com.odontoweb.microservice.rest.binder.ClinicaBinder;
 import com.odontoweb.microservice.rest.binder.DentistaBinder;
 import com.odontoweb.microservice.rest.binder.RecepcionistaBinder;
 import com.odontoweb.microservice.rest.binder.UsuarioBinder;
-import com.odontoweb.microservice.rest.domain.request.DentistaEditRequest;
 import com.odontoweb.microservice.rest.domain.request.DentistaRequest;
-import com.odontoweb.microservice.rest.domain.request.RecepcionistaEditRequest;
 import com.odontoweb.microservice.rest.domain.request.RecepcionistaRequest;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.ClinicasDentistasResponse;
@@ -54,6 +53,9 @@ public class Endpoint {
 
 	@Autowired
 	UsuarioBinder usuarioBinder;
+
+	@Autowired
+	ClinicaBinder clinicaBinder;
 
 	@Autowired
 	JWTAuthorizationUtil jwtUtil;
@@ -112,7 +114,7 @@ public class Endpoint {
 	@RequestMapping(value = "/dentista", method = RequestMethod.POST)
 	public ResponseEntity<?> saveDentista(@RequestBody @Valid DentistaRequest dentistaRequest) {
 		try {
-			if (usuarioService.usuarioExist(dentistaRequest.getUsuarioRequest().getEmail())) {
+			if (usuarioService.usuarioExist(dentistaRequest.getUsuario().getEmail())) {
 				throw new UsuarioDuplicateFoundException();
 			}
 			dentistaRequest.setAtivo(Boolean.TRUE);
@@ -125,10 +127,10 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/dentista", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateDentista(@RequestBody @Valid DentistaEditRequest dentistaEditRequest,
+	public ResponseEntity<?> updateDentista(@RequestBody @Valid DentistaRequest dentistaEditRequest,
 			Authentication authentication) {
 		try {
-			if (!usuarioService.usuarioExist(dentistaEditRequest.getUsuarioEditRequest().getEmail())) {
+			if (!usuarioService.usuarioExist(dentistaEditRequest.getUsuario().getEmail())) {
 				throw new UsuarioNotFoundException();
 			}
 			dentistaService.save(dentistaBinder.requestToModel(dentistaEditRequest));
@@ -175,7 +177,7 @@ public class Endpoint {
 	public ResponseEntity<?> saveRecepcionista(@RequestBody @Valid RecepcionistaRequest recepcionistaRequest,
 			Authentication authentication) {
 		try {
-			if (usuarioService.usuarioExist(recepcionistaRequest.getUsuarioRequest().getEmail())) {
+			if (usuarioService.usuarioExist(recepcionistaRequest.getUsuario().getEmail())) {
 				throw new UsuarioDuplicateFoundException();
 			}
 			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaRequest));
@@ -187,10 +189,10 @@ public class Endpoint {
 	}
 
 	@RequestMapping(value = "/recepcionista", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateRecepcionista(@RequestBody @Valid RecepcionistaEditRequest recepcionistaEditRequest,
+	public ResponseEntity<?> updateRecepcionista(@RequestBody @Valid RecepcionistaRequest recepcionistaEditRequest,
 			Authentication authentication) {
 		try {
-			if (!usuarioService.usuarioExist(recepcionistaEditRequest.getUsuarioEditRequest().getEmail())) {
+			if (!usuarioService.usuarioExist(recepcionistaEditRequest.getUsuario().getEmail())) {
 				throw new UsuarioNotFoundException();
 			}
 			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaEditRequest));
@@ -223,11 +225,12 @@ public class Endpoint {
 					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@RequestMapping(value = "/recepcionista/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getRecepcionista(@PathVariable("id") Long id) {
 		try {
-			return new ResponseEntity<>(recepcionistaBinder.modelToResponse(recepcionistaService.findById(id)), HttpStatus.OK);
+			return new ResponseEntity<>(recepcionistaBinder.modelToResponse(recepcionistaService.findById(id)),
+					HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<ExceptionResponse>(
 					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
@@ -248,4 +251,18 @@ public class Endpoint {
 					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@RequestMapping(value = "/clinica", method = RequestMethod.GET)
+	public ResponseEntity<?> findAllClinicas(Authentication authentication) {
+		try {
+			User user = (User) authentication.getPrincipal();
+			if (!usuarioService.usuarioExist(user.getUsername()))
+				throw new UsuarioNotFoundException();
+			return new ResponseEntity<>(clinicaBinder.modelToListResponse(clinicaService.getClinicas()), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ExceptionResponse>(
+					new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+		}
+	}
+
 }

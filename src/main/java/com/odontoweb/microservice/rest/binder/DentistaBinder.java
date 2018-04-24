@@ -9,7 +9,6 @@ import com.odontoweb.microservice.impl.model.Clinica;
 import com.odontoweb.microservice.impl.model.Dentista;
 import com.odontoweb.microservice.impl.model.enums.Genero;
 import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
-import com.odontoweb.microservice.rest.domain.request.DentistaEditRequest;
 import com.odontoweb.microservice.rest.domain.request.DentistaRequest;
 import com.odontoweb.microservice.rest.domain.response.ClinicasDentistasResponse;
 import com.odontoweb.microservice.rest.domain.response.DentistaResponse;
@@ -27,15 +26,8 @@ public class DentistaBinder implements Serializable {
 	public Dentista requestToModel(DentistaRequest dentistaRequest) {
 		return new Dentista(dentistaRequest.getIdDentista(), dentistaRequest.getNome(),
 				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getRegistro(),
-				usuarioBinder.requestToModel(dentistaRequest.getUsuarioRequest(), TipoProfissional.DENTISTA),
+				usuarioBinder.requestToModel(dentistaRequest.getUsuario(), TipoProfissional.DENTISTA),
 				dentistaRequest.getAtivo());
-	}
-
-	public Dentista requestToModel(DentistaEditRequest dentistaEditRequest) {
-		return new Dentista(dentistaEditRequest.getIdDentista(), dentistaEditRequest.getNome(),
-				Genero.valueOf(dentistaEditRequest.getGenero().toUpperCase()), dentistaEditRequest.getRegistro(),
-				usuarioBinder.requestToModel(dentistaEditRequest.getUsuarioEditRequest(), TipoProfissional.DENTISTA),
-				dentistaEditRequest.getAtivo());
 	}
 
 	public DentistaResponse modelToResponse(Dentista dentista) {
@@ -56,14 +48,6 @@ public class DentistaBinder implements Serializable {
 			return null;
 		return dentistasRequest.stream().filter(Objects::nonNull)
 				.map(dentistaRequest -> requestToModel(dentistaRequest)).collect(Collectors.toList());
-
-	}
-
-	public List<Dentista> requestEditToListModel(List<DentistaEditRequest> dentistasEditRequest) {
-		if (dentistasEditRequest == null)
-			return null;
-		return dentistasEditRequest.stream().filter(Objects::nonNull)
-				.map(dentistaEditRequest -> requestToModel(dentistaEditRequest)).collect(Collectors.toList());
 
 	}
 

@@ -20,7 +20,7 @@ public class UsuarioRequest implements Serializable {
 	@NotNull(message = "Senha é obrigatório")
 	private String senha;
 
-	List<Long> clinicas;
+	private List<ClinicaRequest> clinicas;
 
 	public UsuarioRequest() {
 	}
@@ -70,11 +70,11 @@ public class UsuarioRequest implements Serializable {
 		this.tipoProfissional = tipoProfissional;
 	}
 
-	public List<Long> getClinicas() {
+	public List<ClinicaRequest> getClinicas() {
 		return clinicas;
 	}
 
-	public void setClinicas(List<Long> clinicas) {
+	public void setClinicas(List<ClinicaRequest> clinicas) {
 		this.clinicas = clinicas;
 	}
 

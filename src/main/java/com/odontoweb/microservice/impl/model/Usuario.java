@@ -55,7 +55,7 @@ public class Usuario implements Serializable {
 					@JoinColumn(name = "FK_ROLE", referencedColumnName = "ID") })
 	private List<Role> roles;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	@JoinTable(name = "TBL_USUARIO_CLINICA", joinColumns = {
 			@JoinColumn(name = "FK_USUARIO", referencedColumnName = "ID") }, inverseJoinColumns = {

@@ -10,21 +10,25 @@ import com.odontoweb.microservice.impl.repository.ClinicaRepository;
 public class ClinicaService {
 
 	private ClinicaRepository repository;
-	
+
 	@Autowired
 	public ClinicaService(ClinicaRepository clinicaRepository) {
 		this.repository = clinicaRepository;
 	}
-	
-	public Clinica getByCnpj(Long cnpj){
+
+	public Clinica getByCnpj(Long cnpj) {
 		return repository.findByCnpj(cnpj);
 	}
-	
-	public List<Clinica> getClinicasByIds(List<Long> ids){
+
+	public List<Clinica> getClinicasByIds(List<Long> ids) {
 		return repository.findClinicasByIds(ids);
 	}
-	
-	public Clinica getById(Long id){
+
+	public Clinica getById(Long id) {
 		return repository.findOne(id);
+	}
+
+	public List<Clinica> getClinicas() {
+		return repository.findAll();
 	}
 }

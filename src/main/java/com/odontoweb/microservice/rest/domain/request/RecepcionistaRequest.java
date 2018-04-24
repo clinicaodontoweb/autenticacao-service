@@ -13,9 +13,9 @@ public class RecepcionistaRequest implements Serializable {
 
 	@NotNull(message = "Nome é obrigatório!")
 	private String nome;
-	private UsuarioRequest usuarioRequest;
+	private UsuarioRequest usuario;
 	private String genero;
-	private List<Long> dentistas;
+	private List<DentistaRequest> dentistas;
 
 	public Long getIdRecepcionista() {
 		return idRecepcionista;
@@ -25,12 +25,12 @@ public class RecepcionistaRequest implements Serializable {
 		this.idRecepcionista = idRecepcionista;
 	}
 
-	public UsuarioRequest getUsuarioRequest() {
-		return usuarioRequest;
+	public UsuarioRequest getUsuario() {
+		return usuario;
 	}
 
-	public void setUsuarioRequest(UsuarioRequest usuarioRequest) {
-		this.usuarioRequest = usuarioRequest;
+	public void setUsuario(UsuarioRequest usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getNome() {
@@ -49,11 +49,11 @@ public class RecepcionistaRequest implements Serializable {
 		this.genero = genero;
 	}
 
-	public List<Long> getDentistas() {
+	public List<DentistaRequest> getDentistas() {
 		return dentistas;
 	}
 
-	public void setDentistas(List<Long> dentistas) {
+	public void setDentistas(List<DentistaRequest> dentistas) {
 		this.dentistas = dentistas;
 	}
 

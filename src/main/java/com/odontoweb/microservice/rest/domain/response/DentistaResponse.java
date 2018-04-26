@@ -7,7 +7,7 @@ public class DentistaResponse implements Serializable {
 	private static final long serialVersionUID = -1205176944035282783L;
 
 	private Long idDentista;
-	private UsuarioResponse usuarioResponse;
+	private UsuarioResponse usuario;
 	private String nome;
 	private String genero;
 	private String registro;
@@ -16,10 +16,10 @@ public class DentistaResponse implements Serializable {
 	public DentistaResponse() {
 	}
 
-	public DentistaResponse(Long idDentista, UsuarioResponse usuarioResponse, String nome, String genero,
-			String registro, Boolean ativo) {
+	public DentistaResponse(Long idDentista, UsuarioResponse usuario, String nome, String genero, String registro,
+			Boolean ativo) {
 		this.idDentista = idDentista;
-		this.usuarioResponse = usuarioResponse;
+		this.usuario = usuario;
 		this.nome = nome;
 		this.ativo = ativo;
 		this.genero = genero;
@@ -34,12 +34,12 @@ public class DentistaResponse implements Serializable {
 		this.idDentista = idDentista;
 	}
 
-	public UsuarioResponse getUsuarioResponse() {
-		return usuarioResponse;
+	public UsuarioResponse getUsuario() {
+		return usuario;
 	}
 
-	public void setUsuarioResponse(UsuarioResponse usuarioResponse) {
-		this.usuarioResponse = usuarioResponse;
+	public void setUsuario(UsuarioResponse usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getNome() {

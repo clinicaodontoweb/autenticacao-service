@@ -8,18 +8,18 @@ public class RecepcionistaResponse implements Serializable {
 	private static final long serialVersionUID = 8545669468435865956L;
 
 	private Long idRecepcionista;
-	private UsuarioResponse usuarioResponse;
+	private UsuarioResponse usuario;
 	private String nome;
 	private String genero;
-	private List<DentistaResponse> dentistasResponse;
+	private List<DentistaResponse> dentistas;
 
-	public RecepcionistaResponse(Long idRecepcionista, UsuarioResponse usuarioResponse, String nome, String genero,
-			List<DentistaResponse> dentistasResponse) {
+	public RecepcionistaResponse(Long idRecepcionista, UsuarioResponse usuario, String nome, String genero,
+			List<DentistaResponse> dentistas) {
 		this.idRecepcionista = idRecepcionista;
-		this.usuarioResponse = usuarioResponse;
+		this.usuario = usuario;
 		this.nome = nome;
 		this.genero = genero;
-		this.dentistasResponse = dentistasResponse;
+		this.dentistas = dentistas;
 	}
 
 	public RecepcionistaResponse() {
@@ -32,14 +32,6 @@ public class RecepcionistaResponse implements Serializable {
 
 	public void setIdRecepcionista(Long idRecepcionista) {
 		this.idRecepcionista = idRecepcionista;
-	}
-
-	public UsuarioResponse getUsuarioResponse() {
-		return usuarioResponse;
-	}
-
-	public void setUsuarioResponse(UsuarioResponse usuarioResponse) {
-		this.usuarioResponse = usuarioResponse;
 	}
 
 	public String getNome() {
@@ -58,12 +50,20 @@ public class RecepcionistaResponse implements Serializable {
 		this.genero = genero;
 	}
 
-	public List<DentistaResponse> getDentistasResponse() {
-		return dentistasResponse;
+	public UsuarioResponse getUsuario() {
+		return usuario;
 	}
 
-	public void setDentistasResponse(List<DentistaResponse> dentistasResponse) {
-		this.dentistasResponse = dentistasResponse;
+	public void setUsuario(UsuarioResponse usuario) {
+		this.usuario = usuario;
+	}
+
+	public List<DentistaResponse> getDentistas() {
+		return dentistas;
+	}
+
+	public void setDentistas(List<DentistaResponse> dentistas) {
+		this.dentistas = dentistas;
 	}
 
 }

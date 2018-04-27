@@ -48,12 +48,10 @@ public class UsuarioBinder {
 				encoder.encodePassword(usuarioRequest.getEmail().concat(usuarioRequest.getSenha()), null),
 				usuarioRequest.getAdmin(), TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}
-	
-	private Usuario requestToModel(UsuarioRequest usuarioRequest, String senha) {
-		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(),
-				encoder.encodePassword(senha, null),
-				encoder.encodePassword(usuarioRequest.getEmail().concat(senha), null),
-				usuarioRequest.getAdmin(), TipoProfissional.valueOf(usuarioRequest.getTipoProfissional().toUpperCase()));
+
+	private Usuario requestToModel(UsuarioRequest usuarioRequest, String senha, String hashKey) {
+		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(), senha, hashKey, usuarioRequest.getAdmin(),
+				TipoProfissional.valueOf(usuarioRequest.getTipoProfissional().toUpperCase()));
 	}
 
 	public Usuario requestNovoToModel(UsuarioRequest usuarioRequest, TipoProfissional tipoProfissional) {
@@ -65,11 +63,11 @@ public class UsuarioBinder {
 
 	public Usuario requestEditarToModel(UsuarioRequest usuarioRequest) {
 		Usuario usuarioSaved = usuarioService.getByEmail(usuarioRequest.getEmail());
-		if(usuarioSaved != null) {
-		Usuario usuario = requestToModel(usuarioRequest, usuarioSaved.getSenha());
-		usuario.setClinicas(new ClinicaBinder().requestToListModel(usuarioRequest.getClinicas()));
-		return usuario;
-		}else {
+		if (usuarioSaved != null) {
+			Usuario usuario = requestToModel(usuarioRequest, usuarioSaved.getSenha(), usuarioSaved.getHashKey());
+			usuario.setClinicas(new ClinicaBinder().requestToListModel(usuarioRequest.getClinicas()));
+			return usuario;
+		} else {
 			throw new UsuarioNotFoundException();
 		}
 	}

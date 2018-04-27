@@ -23,12 +23,21 @@ public class RecepcionistaBinder implements Serializable {
 		this.dentistaBinder = dentistaBinder;
 	}
 
-	public Recepcionista requestToModel(RecepcionistaRequest recepcionistaRequest) {
+	public Recepcionista requestNovoToModel(RecepcionistaRequest recepcionistaRequest) {
 		if (recepcionistaRequest == null)
 			return null;
 		return new Recepcionista(recepcionistaRequest.getIdRecepcionista(),
-				usuarioBinder.requestToModel(recepcionistaRequest.getUsuario(), TipoProfissional.RECEPCIONISTA),
+				usuarioBinder.requestNovoToModel(recepcionistaRequest.getUsuario(), TipoProfissional.RECEPCIONISTA),
 				recepcionistaRequest.getNome(), Genero.valueOf(recepcionistaRequest.getGenero().toUpperCase()),
+				dentistaBinder.requestToListModel(recepcionistaRequest.getDentistas()));
+	}
+
+	public Recepcionista requestEditarToModel(RecepcionistaRequest recepcionistaRequest) {
+		if (recepcionistaRequest == null)
+			return null;
+		return new Recepcionista(recepcionistaRequest.getIdRecepcionista(),
+				usuarioBinder.requestEditarToModel(recepcionistaRequest.getUsuario()), recepcionistaRequest.getNome(),
+				Genero.valueOf(recepcionistaRequest.getGenero().toUpperCase()),
 				dentistaBinder.requestToListModel(recepcionistaRequest.getDentistas()));
 	}
 

@@ -23,10 +23,17 @@ public class DentistaBinder implements Serializable {
 		this.usuarioBinder = usuarioBinder;
 	}
 
-	public Dentista requestToModel(DentistaRequest dentistaRequest) {
+	public Dentista requestNovoToModel(DentistaRequest dentistaRequest) {
 		return new Dentista(dentistaRequest.getIdDentista(), dentistaRequest.getNome(),
 				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getRegistro(),
-				usuarioBinder.requestToModel(dentistaRequest.getUsuario(), TipoProfissional.DENTISTA),
+				usuarioBinder.requestNovoToModel(dentistaRequest.getUsuario(), TipoProfissional.DENTISTA),
+				dentistaRequest.getAtivo());
+	}
+	
+	public Dentista requestEditarToModel(DentistaRequest dentistaRequest) {
+		return new Dentista(dentistaRequest.getIdDentista(), dentistaRequest.getNome(),
+				Genero.valueOf(dentistaRequest.getGenero().toUpperCase()), dentistaRequest.getRegistro(),
+				usuarioBinder.requestEditarToModel(dentistaRequest.getUsuario()),
 				dentistaRequest.getAtivo());
 	}
 
@@ -47,7 +54,7 @@ public class DentistaBinder implements Serializable {
 		if (dentistasRequest == null)
 			return null;
 		return dentistasRequest.stream().filter(Objects::nonNull)
-				.map(dentistaRequest -> requestToModel(dentistaRequest)).collect(Collectors.toList());
+				.map(dentistaRequest -> requestEditarToModel(dentistaRequest)).collect(Collectors.toList());
 
 	}
 

@@ -118,7 +118,7 @@ public class Endpoint {
 				throw new UsuarioDuplicateFoundException();
 			}
 			dentistaRequest.setAtivo(Boolean.TRUE);
-			dentistaService.save(dentistaBinder.requestToModel(dentistaRequest));
+			dentistaService.save(dentistaBinder.requestNovoToModel(dentistaRequest));
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<ExceptionResponse>(
@@ -133,7 +133,7 @@ public class Endpoint {
 			if (!usuarioService.usuarioExist(dentistaEditRequest.getUsuario().getEmail())) {
 				throw new UsuarioNotFoundException();
 			}
-			dentistaService.save(dentistaBinder.requestToModel(dentistaEditRequest));
+			dentistaService.save(dentistaBinder.requestEditarToModel(dentistaEditRequest));
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<ExceptionResponse>(
@@ -180,7 +180,7 @@ public class Endpoint {
 			if (usuarioService.usuarioExist(recepcionistaRequest.getUsuario().getEmail())) {
 				throw new UsuarioDuplicateFoundException();
 			}
-			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaRequest));
+			recepcionistaService.save(recepcionistaBinder.requestNovoToModel(recepcionistaRequest));
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<ExceptionResponse>(
@@ -195,7 +195,7 @@ public class Endpoint {
 			if (!usuarioService.usuarioExist(recepcionistaEditRequest.getUsuario().getEmail())) {
 				throw new UsuarioNotFoundException();
 			}
-			recepcionistaService.save(recepcionistaBinder.requestToModel(recepcionistaEditRequest));
+			recepcionistaService.save(recepcionistaBinder.requestEditarToModel(recepcionistaEditRequest));
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<ExceptionResponse>(

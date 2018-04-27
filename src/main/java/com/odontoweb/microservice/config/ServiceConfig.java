@@ -50,13 +50,13 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	public DentistaBinder dentistaBinder(ClinicaRepository clinicaRepository, Md5PasswordEncoder encoder) {
-		return new DentistaBinder(usuarioBinder(encoder));
+	public DentistaBinder dentistaBinder(ClinicaRepository clinicaRepository, UsuarioRepository usuarioRepository, Md5PasswordEncoder encoder) {
+		return new DentistaBinder(usuarioBinder(encoder, usuarioRepository));
 	}
 
 	@Bean
-	public RecepcionistaBinder recepcionistaBinder(ClinicaRepository clinicaRepository, Md5PasswordEncoder encoder) {
-		return new RecepcionistaBinder(usuarioBinder(encoder), dentistaBinder(clinicaRepository, encoder));
+	public RecepcionistaBinder recepcionistaBinder(ClinicaRepository clinicaRepository, UsuarioRepository usuarioRepository, Md5PasswordEncoder encoder) {
+		return new RecepcionistaBinder(usuarioBinder(encoder, usuarioRepository), dentistaBinder(clinicaRepository, usuarioRepository, encoder));
 	}
 
 	@Bean
@@ -70,7 +70,7 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	public UsuarioBinder usuarioBinder(Md5PasswordEncoder encoder) {
-		return new UsuarioBinder(encoder);
+	public UsuarioBinder usuarioBinder(Md5PasswordEncoder encoder, UsuarioRepository usuarioRepository) {
+		return new UsuarioBinder(encoder, usuarioService(usuarioRepository, encoder));
 	}
 }

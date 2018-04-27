@@ -5,17 +5,21 @@ import java.util.stream.Collectors;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
 import com.odontoweb.arquitetura.model.User;
+import com.odontoweb.microservice.exception.UsuarioNotFoundException;
 import com.odontoweb.microservice.impl.model.Usuario;
 import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
+import com.odontoweb.microservice.impl.service.UsuarioService;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.UsuarioResponse;
 
 public class UsuarioBinder {
 
 	private Md5PasswordEncoder encoder;
+	private UsuarioService usuarioService;
 
-	public UsuarioBinder(Md5PasswordEncoder encoder) {
+	public UsuarioBinder(Md5PasswordEncoder encoder, UsuarioService usuarioService) {
 		this.encoder = encoder;
+		this.usuarioService = usuarioService;
 	}
 
 	public User bindUser(Usuario usuario) {
@@ -44,11 +48,29 @@ public class UsuarioBinder {
 				encoder.encodePassword(usuarioRequest.getEmail().concat(usuarioRequest.getSenha()), null),
 				usuarioRequest.getAdmin(), TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}
+	
+	private Usuario requestToModel(UsuarioRequest usuarioRequest, String senha) {
+		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(),
+				encoder.encodePassword(senha, null),
+				encoder.encodePassword(usuarioRequest.getEmail().concat(senha), null),
+				usuarioRequest.getAdmin(), TipoProfissional.valueOf(usuarioRequest.getTipoProfissional().toUpperCase()));
+	}
 
-	public Usuario requestToModel(UsuarioRequest usuarioRequest, TipoProfissional tipoProfissional) {
+	public Usuario requestNovoToModel(UsuarioRequest usuarioRequest, TipoProfissional tipoProfissional) {
 		usuarioRequest.setTipoProfissional(tipoProfissional.name());
 		Usuario usuario = requestToModel(usuarioRequest);
 		usuario.setClinicas(new ClinicaBinder().requestToListModel(usuarioRequest.getClinicas()));
 		return usuario;
+	}
+
+	public Usuario requestEditarToModel(UsuarioRequest usuarioRequest) {
+		Usuario usuarioSaved = usuarioService.getByEmail(usuarioRequest.getEmail());
+		if(usuarioSaved != null) {
+		Usuario usuario = requestToModel(usuarioRequest, usuarioSaved.getSenha());
+		usuario.setClinicas(new ClinicaBinder().requestToListModel(usuarioRequest.getClinicas()));
+		return usuario;
+		}else {
+			throw new UsuarioNotFoundException();
+		}
 	}
 }

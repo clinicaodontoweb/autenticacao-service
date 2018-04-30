@@ -57,13 +57,13 @@ public class UsuarioResponse implements Serializable {
 		this.clinicas = clinicas;
 	}
 
-    public String getTipoProfissional() {
-        return tipoProfissional;
-    }
+	public String getTipoProfissional() {
+		return tipoProfissional;
+	}
 
-    public void setTipoProfissional(String tipoProfissional) {
-        this.tipoProfissional = tipoProfissional;
-    }
+	public void setTipoProfissional(String tipoProfissional) {
+		this.tipoProfissional = tipoProfissional;
+	}
 
 	public String getHashKey() {
 		return hashKey;

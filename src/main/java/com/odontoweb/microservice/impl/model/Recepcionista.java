@@ -42,7 +42,7 @@ public class Recepcionista implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Genero genero;
 
-	@ManyToMany(cascade = CascadeType.REFRESH)
+	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable(name = "TBL_RECEPCIONISTA_DENTISTA", joinColumns = @JoinColumn(name = "FK_RECEPCIONISTA", referencedColumnName = "ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "FK_DENTISTA", referencedColumnName = "ID", nullable = false))
 	private List<Dentista> dentistas;
 

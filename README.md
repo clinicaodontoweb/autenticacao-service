@@ -41,6 +41,16 @@ http://localhost:8000/sample-service/auth
 }
 ```
 
+**Response Error**
+
+```
+{
+  "message": "Usuario ou Senha nao conferem.",
+  "stacktrace": null,
+  "status": 400
+}
+```
+
 --------------------------------------------
 
 

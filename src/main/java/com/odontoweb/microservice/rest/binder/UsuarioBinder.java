@@ -1,9 +1,6 @@
 package com.odontoweb.microservice.rest.binder;
 
 import java.util.stream.Collectors;
-
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-
 import com.odontoweb.arquitetura.model.User;
 import com.odontoweb.microservice.exception.UsuarioNotFoundException;
 import com.odontoweb.microservice.impl.model.Usuario;
@@ -11,13 +8,14 @@ import com.odontoweb.microservice.impl.model.enums.TipoProfissional;
 import com.odontoweb.microservice.impl.service.UsuarioService;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
 import com.odontoweb.microservice.rest.domain.response.UsuarioResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UsuarioBinder {
 
-	private Md5PasswordEncoder encoder;
+	private PasswordEncoder encoder;
 	private UsuarioService usuarioService;
 
-	public UsuarioBinder(Md5PasswordEncoder encoder, UsuarioService usuarioService) {
+	public UsuarioBinder(PasswordEncoder encoder, UsuarioService usuarioService) {
 		this.encoder = encoder;
 		this.usuarioService = usuarioService;
 	}
@@ -44,8 +42,8 @@ public class UsuarioBinder {
 
 	private Usuario requestToModel(UsuarioRequest usuarioRequest) {
 		return new Usuario(usuarioRequest.getId(), usuarioRequest.getEmail(),
-				encoder.encodePassword(usuarioRequest.getSenha(), null),
-				encoder.encodePassword(usuarioRequest.getEmail().concat(usuarioRequest.getSenha()), null),
+				encoder.encode(usuarioRequest.getSenha()),
+				encoder.encode(usuarioRequest.getEmail().concat(usuarioRequest.getSenha())),
 				usuarioRequest.getAdmin(), TipoProfissional.valueOf(usuarioRequest.getTipoProfissional()));
 	}
 

@@ -2,7 +2,6 @@ package com.odontoweb.microservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
 import com.odontoweb.microservice.impl.repository.ClinicaRepository;
 import com.odontoweb.microservice.impl.repository.DentistaRepository;
@@ -19,12 +18,13 @@ import com.odontoweb.microservice.rest.binder.DentistaBinder;
 import com.odontoweb.microservice.rest.binder.RecepcionistaBinder;
 import com.odontoweb.microservice.rest.binder.RoleBinder;
 import com.odontoweb.microservice.rest.binder.UsuarioBinder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ServiceConfig {
 
 	@Bean
-	public UsuarioService usuarioService(UsuarioRepository repositorio, Md5PasswordEncoder encoder) {
+	public UsuarioService usuarioService(UsuarioRepository repositorio, PasswordEncoder encoder) {
 		return new UsuarioService(repositorio, encoder);
 	}
 
@@ -50,12 +50,12 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	public DentistaBinder dentistaBinder(ClinicaRepository clinicaRepository, UsuarioRepository usuarioRepository, Md5PasswordEncoder encoder) {
+	public DentistaBinder dentistaBinder(ClinicaRepository clinicaRepository, UsuarioRepository usuarioRepository, PasswordEncoder encoder) {
 		return new DentistaBinder(usuarioBinder(encoder, usuarioRepository));
 	}
 
 	@Bean
-	public RecepcionistaBinder recepcionistaBinder(ClinicaRepository clinicaRepository, UsuarioRepository usuarioRepository, Md5PasswordEncoder encoder) {
+	public RecepcionistaBinder recepcionistaBinder(ClinicaRepository clinicaRepository, UsuarioRepository usuarioRepository, PasswordEncoder encoder) {
 		return new RecepcionistaBinder(usuarioBinder(encoder, usuarioRepository), dentistaBinder(clinicaRepository, usuarioRepository, encoder));
 	}
 
@@ -70,7 +70,7 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	public UsuarioBinder usuarioBinder(Md5PasswordEncoder encoder, UsuarioRepository usuarioRepository) {
+	public UsuarioBinder usuarioBinder(PasswordEncoder encoder, UsuarioRepository usuarioRepository) {
 		return new UsuarioBinder(encoder, usuarioService(usuarioRepository, encoder));
 	}
 }

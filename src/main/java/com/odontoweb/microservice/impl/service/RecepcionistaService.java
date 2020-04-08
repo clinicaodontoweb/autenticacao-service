@@ -29,7 +29,7 @@ public class RecepcionistaService {
 	}
 
 	public void delete(Long id) {
-		recepcionistaRepository.delete(id);
+		recepcionistaRepository.deleteById(id);
 	}
 
 	public List<Recepcionista> findAllRecepcionistasByClinica(Long cnpj) {
@@ -41,7 +41,7 @@ public class RecepcionistaService {
 	}
 
 	public Recepcionista findById(Long idRecepcionista) {
-		return recepcionistaRepository.findOne(idRecepcionista);
+		return recepcionistaRepository.getOne(idRecepcionista);
 	}
 
 	public Recepcionista findByUsuarioClinica(String email) {

@@ -28,7 +28,7 @@ public class DentistaService {
 	}
 
 	public void delete(Long id) {
-		dentistaRepository.delete(id);
+		dentistaRepository.deleteById(id);
 	}
 
 	public List<Dentista> findAllDentistasByClinica(Long cnpj) {
@@ -40,7 +40,7 @@ public class DentistaService {
 	}
 
 	public Dentista findById(Long idPaciente) {
-		return dentistaRepository.findOne(idPaciente);
+		return dentistaRepository.getOne(idPaciente);
 	}
 
 	public List<Dentista> getListDentistas(List<Long> ids) {

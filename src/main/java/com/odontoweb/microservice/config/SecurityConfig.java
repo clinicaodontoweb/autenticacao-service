@@ -46,14 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-//				.anyRequest().permitAll()
 			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 			.antMatchers("/auth*").permitAll()
-				.anyRequest().authenticated();
-//			.antMatchers("/roles**").permitAll()
-//			.antMatchers("/dentista/**").permitAll()
-//			.antMatchers("/recepcionista/**").permitAll();
-
+			.antMatchers("/roles*").permitAll()
+			.antMatchers("/dentista/*").permitAll()
+			.antMatchers("/recepcionista/*").permitAll()
+			.anyRequest().authenticated();
+		
 		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

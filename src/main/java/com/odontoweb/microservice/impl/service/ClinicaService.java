@@ -25,7 +25,7 @@ public class ClinicaService {
 	}
 
 	public Clinica getById(Long id) {
-		return repository.findOne(id);
+		return repository.getOne(id);
 	}
 
 	public List<Clinica> getClinicas() {

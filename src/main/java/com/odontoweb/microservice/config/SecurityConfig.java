@@ -47,10 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-			.antMatchers("/auth/**").permitAll()
-			.antMatchers("/roles**").permitAll()
-			.antMatchers("/dentista/**").permitAll()
-			.antMatchers("/recepcionista/**").permitAll()
+			.antMatchers("/auth*").permitAll()
+			.antMatchers("/roles*").permitAll()
+			.antMatchers("/dentista/*").permitAll()
+			.antMatchers("/recepcionista/*").permitAll()
 			.anyRequest().authenticated();
 		
 		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);

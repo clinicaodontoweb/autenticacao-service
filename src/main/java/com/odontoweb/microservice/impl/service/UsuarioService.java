@@ -4,28 +4,28 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
 import com.odontoweb.microservice.exception.ClinicaNotFoundException;
 import com.odontoweb.microservice.exception.UsuarioOrPasswordWrongException;
 import com.odontoweb.microservice.impl.model.Usuario;
 import com.odontoweb.microservice.impl.repository.UsuarioRepository;
 import com.odontoweb.microservice.rest.domain.request.UsuarioRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UsuarioService {
 
 	private UsuarioRepository repository;
-	private Md5PasswordEncoder encoder;
+	private PasswordEncoder encoder;
 
 	@Autowired
-	public UsuarioService(UsuarioRepository usuarioRepository, Md5PasswordEncoder encoder) {
+	public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder encoder) {
 		this.repository = usuarioRepository;
 		this.encoder = encoder;
 	}
 
 	public Usuario login(UsuarioRequest usuario) {
 		Usuario user = repository.findByEmailAndSenha(usuario.getEmail(),
-				encoder.encodePassword(usuario.getSenha(), null));
+				encoder.encode(usuario.getSenha()));
 		Optional.ofNullable(user).orElseThrow(UsuarioOrPasswordWrongException::new);
 		Optional.ofNullable(user.getClinicas()).orElseThrow(ClinicaNotFoundException::new);
 		if (user.getClinicas().isEmpty())
@@ -47,7 +47,7 @@ public class UsuarioService {
 	}
 
 	public void delete(Long id) {
-		repository.delete(id);
+		repository.deleteById(id);
 	}
 
 	public boolean save(Usuario usuario) {
